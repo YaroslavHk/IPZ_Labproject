@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace IPZ_Labproject;
+namespace RentalClient;
 
 /// <summary>
 /// Interaction logic for App.xaml

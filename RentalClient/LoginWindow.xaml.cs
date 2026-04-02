@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace IPZ_Labproject;
+namespace RentalClient;
 
 public partial class LoginWindow : Window
 {
