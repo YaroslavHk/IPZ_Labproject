@@ -22,3 +22,16 @@ public class RentalResponse
     public DateTime Created { get; set; }
     public DateTime LastModified { get; set; }
 }
+
+public class ShortRentalResponse
+{
+    public Guid Id { get; set; }
+    public string Title { get; set; } = "";
+    public decimal Price { get; set; }
+    public string City { get; set; } = "";
+    public string Type { get; set; } = "";
+    public float LivingSpace { get; set; }
+    public Guid UserId { get; set; }
+}
+
+//public class Rental
