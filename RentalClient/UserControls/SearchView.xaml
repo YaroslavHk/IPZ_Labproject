@@ -1,0 +1,85 @@
+﻿<UserControl x:Class="RentalClient.UserControls.SearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:RentalClient.UserControls"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    <!--WorkPlace-->
+    <Grid  Margin="10">
+            <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            
+            <!--FilterBox-->
+            <Border Grid.Column="0" 
+                    Style="{StaticResource CardBorderStyle}"
+                    Width="300"
+                    HorizontalAlignment="Left">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/> <RowDefinition Height="*"/> <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <Label Grid.Row="0" 
+                               Style="{StaticResource SectionTitleLabelStyle}" FontWeight="Heavy"
+                               Content="Фільтр"></Label>
+                        
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource SectionTitleLabelStyle}"
+                                   Content="Ціна"></Label>
+                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <TextBox  Width="60" Height="30" Style="{StaticResource FilterTextBoxStyle}"/>
+                                <Label Style="{StaticResource SectionTitleLabelStyle}" Content="-"></Label>
+                                <TextBox  Width="60" Height="30" Style="{StaticResource FilterTextBoxStyle}"/>
+                            </StackPanel>
+                            
+                            <Label Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
+                                   Style="{StaticResource SectionTitleLabelStyle}"
+                                   Content="Кімнати:"/>
+                            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <ToggleButton Height="30" Width="30" Style="{StaticResource FilterToggleButtonStyle}" Content="1"/>
+                                <ToggleButton Height="30" Width="30" Style="{StaticResource FilterToggleButtonStyle}" Content="2"/>
+                                <ToggleButton Height="30" Width="30" Style="{StaticResource FilterToggleButtonStyle}" Content="3"/>
+                            </StackPanel>
+                            
+                            <Label Grid.Row="2"  Grid.Column="0"
+                                   Style="{StaticResource SectionTitleLabelStyle}"
+                                   Content="Тип:"/>
+                            <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center">
+                                <ToggleButton Height="30" Width="120" Style="{StaticResource FilterToggleButtonStyle}" Content="Квартира"/>
+                                <ToggleButton Height="30" Width="120" Style="{StaticResource FilterToggleButtonStyle}" Content="Будинок"/>
+                            </StackPanel>
+                            
+                            <Label Grid.Row="3" Grid.Column="0"
+                                   Style="{StaticResource SectionTitleLabelStyle}"
+                                   Content="Площа:"/>
+                            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <TextBox  Width="60" Height="30" Style="{StaticResource FilterTextBoxStyle}"/>
+                                <Label Style="{StaticResource SectionTitleLabelStyle}" Content="-"/>
+                                <TextBox  Width="60" Height="30" Style="{StaticResource FilterTextBoxStyle}"/>
+                            </StackPanel>
+                        </Grid>
+                        
+                        <Button Grid.Row="2" 
+                                Content="ЗАСТОСУВАТИ" 
+                                Style="{StaticResource PrimaryButtonStyle}"></Button>
+                        
+                    </Grid>
+            </Border>
+    </Grid>
+</UserControl>
