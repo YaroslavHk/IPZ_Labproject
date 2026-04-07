@@ -16,6 +16,4 @@ public class RentalDbContext : DbContext
         modelBuilder.Entity<Rental>().Property(r => r.Id).ValueGeneratedOnAdd();
         base.OnModelCreating(modelBuilder);
     }
-    
-    
 }

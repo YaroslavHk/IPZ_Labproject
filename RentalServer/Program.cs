@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using RentalServer.Data;
 using RentalServer.Endpoints;
+using RentalServer.ExceptionHandeler;
 
 var builder = WebApplication.CreateBuilder(args);
 string secretKey = builder.Configuration["Jwt:Key"] ?? "MySuperSecretKeyForDevelopmentOnly123!"; 
@@ -48,6 +49,8 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 

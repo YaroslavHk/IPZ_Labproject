@@ -33,6 +33,7 @@ public static class AuthEndpoints
             {
                 Email = request.Email,
                 PasswordHash = hashedPassword,
+                Phone  = request.Phone,
                 Username = request.UserName
             };
             

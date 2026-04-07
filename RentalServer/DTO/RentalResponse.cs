@@ -30,8 +30,27 @@ public class ShortRentalResponse
     public decimal Price { get; set; }
     public string City { get; set; } = "";
     public string Type { get; set; } = "";
+    public string Address { get; set; } = "";
     public float LivingSpace { get; set; }
     public Guid UserId { get; set; }
 }
 
-//public class Rental
+public class RentalRequest
+{
+    public string Title { get; set; } = "";
+    public string Description { get; set; } = "";
+    
+    public decimal Price { get; set; }
+    public string City { get; set; } = "";
+    
+    public string Address { get; set; } = "";
+    public string Type { get; set; } = "";
+    
+    public float LivingSpace { get; set; }
+    public Guid UserId { get; set; }
+}
+
+public class RentalPostResponse
+{
+    public Guid Id { get; set; }
+}

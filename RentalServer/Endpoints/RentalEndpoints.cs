@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Security.Claims; // ОБЯЗАТЕЛЬНО добавить для работы с ClaimsPrincipal
+﻿using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using RentalServer.Data;
 using RentalServer.DTO;
 using RentalServer.Models;
@@ -11,48 +11,58 @@ public static class RentalEndpoints
     public static void MapRentalEndpoints(this WebApplication app)
     {
         var group = app.MapGroup("/api/rentals");
-        
-        // GET (Доступно всем) - просмотр всех объявлений
-        group.MapGet("/", async (RentalDbContext db) =>
-        {
-            var rental = await db.Rentals.Select(r => new RentalResponse
-            {
-                Id = r.Id,
-                Title = r.Title,
-                Description = r.Description,
-                Price = r.Price,
-                City = r.City,
-                Address = r.Address,
-                Type = r.Type,
-                LivingSpace = r.LivingSpace,
-                UserId = r.UserId,
-                Created = r.Created,
-                LastModified = r.LastModified
-            }).ToListAsync();
 
-            if (!rental.Any())
+        group.MapGet("/", async (RentalDbContext db, int page = 1, int pageSize = 10) =>
+        {
+            if (page < 1) page = 1;
+            if (pageSize > 50) pageSize = 50; 
+
+            var rentals = await db.Rentals
+                .Where(r => !r.IsHidden && !r.IsRentedOut)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(r => new ShortRentalResponse
+                {
+                    Id = r.Id,
+                    Title = r.Title,
+                    Price = r.Price,
+                    City = r.City,
+                    Type = r.Type,
+                    LivingSpace = r.LivingSpace,
+                    UserId = r.UserId
+                })
+                .ToListAsync();
+
+            if (!rentals.Any())
             {
-                return Results.NotFound(new { Message = "There are no Apartments" });
+                return Results.NotFound(new { Message = "No apartments found." });
             }
 
-            return Results.Ok(rental);
+            return Results.Ok(rentals);
         });
-        
-        // GET (Доступно всем) - просмотр конкретного объявления
+
         group.MapGet("/{id}", async (Guid id, RentalDbContext db) => 
         {
             var rental = await db.Rentals.FindAsync(id);
+    
             if (rental == null) 
             {
                 return Results.NotFound(new { Message = "Apartment does not exist." });
             }
+    
             return Results.Ok(rental);
         });
         
-        // POST (ТОЛЬКО ДЛЯ АВТОРИЗОВАННЫХ) - создание объявления
-        group.MapPost("/", async (Rental newRental, RentalDbContext db, ClaimsPrincipal user) => 
+        group.MapPost("/", async (RentalRequest request, RentalDbContext db, ClaimsPrincipal user) => 
         {
-            // 1. Достаем ID пользователя из токена (тот самый ClaimTypes.NameIdentifier, который мы клали при логине)
+            var validator = new CreateRentalRequestValidator();
+            var validationResult = await validator.ValidateAsync(request);
+            
+            if (!validationResult.IsValid)
+            {
+                return Results.BadRequest(validationResult.Errors.Select(e => e.ErrorMessage));
+            }
+
             var userIdString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             
             if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out Guid userId))
@@ -60,18 +70,32 @@ public static class RentalEndpoints
                 return Results.Unauthorized();
             }
 
-            // 2. Принудительно присваиваем квартире ID того человека, чей токен мы получили
-            newRental.UserId = userId;
-            
-            // 3. Проставляем даты (чтобы не зависеть от того, что прислали с фронта)
-            newRental.Created = DateTime.UtcNow;
-            newRental.LastModified = DateTime.UtcNow;
+            var newRental = new Rental
+            {
+                Title = request.Title,
+                Description = request.Description,
+                Price = request.Price,
+                City = request.City,
+                Address = request.Address,
+                Type = request.Type,
+                LivingSpace = request.LivingSpace,
+                UserId = userId,
+                Created = DateTime.UtcNow,
+                LastModified = DateTime.UtcNow,
+                IsRentedOut = false,
+                IsHidden = false
+            };
         
             db.Rentals.Add(newRental);
             await db.SaveChangesAsync();
+
+            var response = new RentalPostResponse
+            {
+                Id = newRental.Id
+            };
         
-            return Results.Created($"/api/rentals/{newRental.Id}", newRental);
+            return Results.Created($"/api/rentals/{newRental.Id}", response);
         })
-        .RequireAuthorization(); // <--- КЛЮЧЕВОЙ МОМЕНТ: эндпоинт требует токен!
+        .RequireAuthorization();
     }
 }
