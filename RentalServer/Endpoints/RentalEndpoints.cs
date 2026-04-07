@@ -27,6 +27,7 @@ public static class RentalEndpoints
                     Title = r.Title,
                     Price = r.Price,
                     City = r.City,
+                    Address = r.Address,
                     Type = r.Type,
                     LivingSpace = r.LivingSpace,
                     UserId = r.UserId

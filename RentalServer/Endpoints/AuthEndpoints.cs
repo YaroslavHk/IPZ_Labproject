@@ -45,19 +45,20 @@ public static class AuthEndpoints
 
         group.MapPost("/login", async (AuthRequest request, RentalDbContext db) =>
         {
-            var user = await db.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+            var user = await db.Users.FirstOrDefaultAsync(u => 
+                u.Username == request.Login || 
+                u.Email == request.Login || 
+                u.Phone == request.Login);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
                 return Results.Unauthorized();
             }
 
-            // Using fallback string if config doesn't have Jwt:Key
             string secretKey = config["Jwt:Key"] ?? "MySuperSecretKeyForDevelopmentOnly123!";
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            // Storing the Guid ID and Username in the token
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),

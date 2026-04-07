@@ -1,6 +1,6 @@
 ﻿namespace RentalServer.DTO;
 
-public class RentalResponse
+public class RentalDTOs
 {
     public Guid Id { get; set; }
     
@@ -47,7 +47,6 @@ public class RentalRequest
     public string Type { get; set; } = "";
     
     public float LivingSpace { get; set; }
-    public Guid UserId { get; set; }
 }
 
 public class RentalPostResponse
