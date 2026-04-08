@@ -1,0 +1,104 @@
+﻿<UserControl x:Class="RentalClient.UserControls.CreateListingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:RentalClient.UserControls"
+             mc:Ignorable="d"
+             Background="{StaticResource BackgroundBrush}">
+    
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Border Style="{StaticResource CardBorderStyle}" 
+                    MaxWidth="600" 
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Top" 
+                    Margin="20" 
+                    Padding="40">
+                
+                <StackPanel>
+                    <Label Style="{StaticResource SectionTitleLabelStyle}" 
+                           Content="Нове оголошення" 
+                           FontSize="24" 
+                           FontWeight="Heavy"
+                           HorizontalAlignment="Center" 
+                           Margin="0,0,0,30"/>
+                    
+                    <TextBox Style="{StaticResource BaseTextBoxStyle}" 
+                             Tag="Заголовок оголошення" 
+                             Margin="0,0,0,20"/>
+                    
+                    <Grid Margin="0,0,0,30">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" MinWidth="100"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <Label Grid.Row="0" Grid.Column="0" 
+                               Style="{StaticResource SectionTitleLabelStyle}" 
+                               Content="Тип:" 
+                               Margin="0,0,10,15"/>
+                        
+                        <StackPanel Grid.Row="0" Grid.Column="1" 
+                                    Orientation="Horizontal" 
+                                    Margin="0,0,0,15">
+                            <ToggleButton Style="{StaticResource FilterToggleButtonStyle}" 
+                                          Content="Квартира" MinWidth="120" 
+                                          Margin="0,0,10,0"/>
+                            <ToggleButton Style="{StaticResource FilterToggleButtonStyle}" 
+                                          Content="Будинок" MinWidth="120"/>
+                        </StackPanel>
+                        
+                        <Label Grid.Row="1" Grid.Column="0" 
+                               Style="{StaticResource SectionTitleLabelStyle}" 
+                               Content="Ціна:" 
+                               Margin="0,0,10,15"/>
+                        
+                        <TextBox Grid.Row="1" Grid.Column="1" 
+                                 Style="{StaticResource FilterTextBoxStyle}" 
+                                 HorizontalAlignment="Left" 
+                                 MinWidth="150" 
+                                 Margin="0,0,0,15"/>
+                        
+                        <Label Grid.Row="2" Grid.Column="0" 
+                               Style="{StaticResource SectionTitleLabelStyle}" 
+                               Content="Кімнати:" 
+                               Margin="0,0,10,15"/>
+                        
+                        <TextBox Grid.Row="2" Grid.Column="1" 
+                                 Style="{StaticResource FilterTextBoxStyle}" 
+                                 HorizontalAlignment="Left" 
+                                 MinWidth="100" 
+                                 Margin="0,0,0,15"/>
+                        
+                        <Label Grid.Row="3" Grid.Column="0" 
+                               Style="{StaticResource SectionTitleLabelStyle}" 
+                               Content="Площа:" 
+                               Margin="0,0,10,0"/>
+                        
+                        <StackPanel Grid.Row="3" Grid.Column="1" 
+                                    Orientation="Horizontal">
+                            
+                            <TextBox Style="{StaticResource FilterTextBoxStyle}" 
+                                     MinWidth="100"/>
+                            
+                            <Label Style="{StaticResource SectionTitleLabelStyle}" 
+                                   Content="кв.м" 
+                                   Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                    
+                    <Button Style="{StaticResource PrimaryButtonStyle}" 
+                            Content="Розмістити оголошення" 
+                            Margin="0"/>
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

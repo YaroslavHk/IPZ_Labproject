@@ -1,0 +1,105 @@
+﻿<UserControl x:Class="RentalClient.UserControls.SearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:RentalClient.UserControls"
+             mc:Ignorable="d">
+    
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Border Grid.Column="0" 
+                Style="{StaticResource CardBorderStyle}" 
+                MinWidth="280" 
+                HorizontalAlignment="Left">
+            <StackPanel Margin="15">
+                <Label Style="{StaticResource SectionTitleLabelStyle}" 
+                       FontWeight="Heavy" 
+                       Content="Фільтр" Margin="0,0,0,15"/>
+                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Label Grid.Row="0" Grid.Column="0" 
+                           Style="{StaticResource SectionTitleLabelStyle}" 
+                           Content="Ціна" 
+                           Margin="0,0,10,10"/>
+                    
+                    <StackPanel Grid.Row="0" Grid.Column="1" 
+                                Orientation="Horizontal" 
+                                HorizontalAlignment="Right" 
+                                Margin="0,0,0,10">
+                        
+                        <TextBox MinWidth="60" Style="{StaticResource FilterTextBoxStyle}"/>
+                        <Label Style="{StaticResource SectionTitleLabelStyle}" Content="-" Margin="5,0"/>
+                        <TextBox MinWidth="60" Style="{StaticResource FilterTextBoxStyle}"/>
+                    </StackPanel>
+                    
+                    <Label Grid.Row="1" Grid.Column="0" 
+                           Style="{StaticResource SectionTitleLabelStyle}" 
+                           Content="Кімнати:" 
+                           Margin="0,0,10,10"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" 
+                             MinWidth="60" HorizontalAlignment="Center" 
+                             Style="{StaticResource FilterTextBoxStyle}" 
+                             Margin="0,0,0,10"/>
+                    
+                    <Label Grid.Row="2" Grid.Column="0" 
+                           Style="{StaticResource SectionTitleLabelStyle}" 
+                           Content="Тип:" 
+                           Margin="0,0,10,10"/>
+                    
+                    <StackPanel Grid.Row="2" Grid.Column="1" 
+                                HorizontalAlignment="Right" 
+                                Margin="0,0,0,10">
+                        
+                        <ToggleButton MinWidth="120" 
+                                      Style="{StaticResource FilterToggleButtonStyle}" 
+                                      Content="Квартира" 
+                                      Margin="0,0,0,5"/>
+                        
+                        <ToggleButton MinWidth="120"
+                                      Style="{StaticResource FilterToggleButtonStyle}" 
+                                      Content="Будинок"/>
+                    </StackPanel>
+                    
+                    <Label Grid.Row="3" Grid.Column="0" 
+                           Style="{StaticResource SectionTitleLabelStyle}" 
+                           Content="Площа:" 
+                           Margin="0,0,10,10"/>
+                    <StackPanel Grid.Row="3" Grid.Column="1" 
+                                Orientation="Horizontal" 
+                                HorizontalAlignment="Right" 
+                                Margin="0,0,0,10">
+                        
+                        <TextBox MinWidth="60" 
+                                 Style="{StaticResource FilterTextBoxStyle}"/>
+                        
+                        <Label Style="{StaticResource SectionTitleLabelStyle}" 
+                               Content="-" Margin="5,0"/>
+                        
+                        <TextBox MinWidth="60" 
+                                 Style="{StaticResource FilterTextBoxStyle}"/>
+                    </StackPanel>
+                </Grid>
+                
+                <Button Content="ЗАСТОСУВАТИ" 
+                        Style="{StaticResource PrimaryButtonStyle}" 
+                        Margin="0,20,0,0"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

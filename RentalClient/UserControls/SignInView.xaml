@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="RentalClient.UserControls.SignInView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:RentalClient"
+             mc:Ignorable="d"
+             Background="{StaticResource BackgroundGradientBrush}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <Button Grid.Row="0" 
+                Style="{StaticResource PrimaryButtonStyle}" 
+                HorizontalAlignment="Left" 
+                PreviewMouseLeftButtonUp="BackToMainWindowButton_Click" 
+                Content="Back"/>
+        
+        <Border Grid.Row="1" 
+                Style="{StaticResource AuthCardBorderStyle}"
+                MaxWidth="500" 
+                Padding="30">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+            
+                <Label Grid.Row="0" 
+                       Style="{StaticResource AuthTitleLabelStyle}" 
+                       Content="Вхід"/>
+                
+                <TextBox Grid.Row="1"
+                         Style="{StaticResource AuthTextBoxStyle}"
+                         Tag="Телефон або Email" 
+                         local:Designer.IsMonitoring="True"/>
+                
+                <PasswordBox Grid.Row="2" 
+                             Style="{StaticResource BasePasswordBoxStyle}" 
+                             Tag="Пароль" 
+                             local:Designer.IsMonitoring="True"/>
+                
+                <Button Grid.Row="3" 
+                        Style="{StaticResource PrimaryButtonStyle}" 
+                        Margin="0,20,0,10" 
+                        Content="Увійти"/>
+                
+                <TextBlock Grid.Row="4" 
+                           Style="{StaticResource ActionLinkTextStyle}" 
+                           Text="Немає акаунту? Створити акаунт" 
+                           MouseLeftButtonDown="SignUpButton_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
