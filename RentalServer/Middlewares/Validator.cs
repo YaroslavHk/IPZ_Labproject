@@ -3,7 +3,7 @@
 using FluentValidation;
 using RentalServer.DTO;
 
-namespace RentalServer.Models;
+namespace RentalServer.Middlewares;
 
 public class CreateRentalRequestValidator : AbstractValidator<RentalRequest>
 {

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RentalServer.Data;
 using RentalServer.DTO;
+using RentalServer.Middlewares;
 using RentalServer.Models;
 
 namespace RentalServer.Endpoints;
