@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:RentalClient"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="1000"
              Background="{StaticResource BackgroundGradientBrush}">
     <Grid>
         <Grid.RowDefinitions>
@@ -13,48 +12,48 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         
-        <Button Grid.Row="0"
-                Style="{StaticResource PrimaryButtonStyle}"
-                HorizontalAlignment="Left"
-                PreviewMouseLeftButtonUp="BackToMainWindowButton_Click"
+        <Button Grid.Row="0" 
+                Style="{StaticResource PrimaryButtonStyle}" 
+                HorizontalAlignment="Left" 
+                PreviewMouseLeftButtonUp="BackToMainWindowButton_Click" 
                 Content="Back"/>
         
-        <Border Grid.Row="1" Style="{StaticResource AuthCardBorderStyle}"
-                Width="500" Height="500"
-                Padding="10,5">
+        <Border Grid.Row="1" 
+                Style="{StaticResource AuthCardBorderStyle}"
+                MaxWidth="500" 
+                Padding="30">
             <Grid>
                 <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
             
                 <Label Grid.Row="0" 
-                       Style="{StaticResource AuthTitleLabelStyle}"
-                       Content="Вхід"></Label>
+                       Style="{StaticResource AuthTitleLabelStyle}" 
+                       Content="Вхід"/>
                 
                 <TextBox Grid.Row="1"
                          Style="{StaticResource AuthTextBoxStyle}"
-                         Tag="Телефон або Email"
+                         Tag="Телефон або Email" 
                          local:Designer.IsMonitoring="True"/>
                 
-                <PasswordBox Grid.Row="2"
+                <PasswordBox Grid.Row="2" 
                              Style="{StaticResource BasePasswordBoxStyle}" 
-                             Tag="Пароль"
+                             Tag="Пароль" 
                              local:Designer.IsMonitoring="True"/>
                 
                 <Button Grid.Row="3" 
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        VerticalAlignment="Bottom"
-                        Content="Увійти"></Button>
+                        Style="{StaticResource PrimaryButtonStyle}" 
+                        Margin="0,20,0,10" 
+                        Content="Увійти"/>
                 
                 <TextBlock Grid.Row="4" 
-                           Style="{StaticResource ActionLinkTextStyle}"
-                           Text="Немає акаунту? Створити акаунт"
-                           MouseLeftButtonDown="SignUpButton_Click">
-                </TextBlock>
+                           Style="{StaticResource ActionLinkTextStyle}" 
+                           Text="Немає акаунту? Створити акаунт" 
+                           MouseLeftButtonDown="SignUpButton_Click"/>
             </Grid>
         </Border>
     </Grid>

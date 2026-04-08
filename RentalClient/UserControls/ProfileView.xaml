@@ -5,95 +5,133 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:RentalClient.UserControls"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300"
              Background="{StaticResource BackgroundBrush}">
        
-        <Grid Margin="20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="350"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="320"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0" Style="{StaticResource CardBorderStyle}" Padding="30" Margin="0,0,30,0" VerticalAlignment="Top">
+        <StackPanel Grid.Column="0" Margin="0,0,30,0">
+            <Border Style="{StaticResource CardBorderStyle}" 
+                    Padding="30" Margin="0,0,0,20">
                 <StackPanel>
-                    
                     <Border Height="200" Width="200" 
-                            BorderBrush="{StaticResource BorderPrimaryBrush}" BorderThickness="2" 
-                            Background="#FAFAFA" CornerRadius="10" Margin="0,0,0,20">
-                        <TextBlock Text="Аватар" 
-                                   Foreground="{StaticResource TextHintBrush}" 
+                            BorderBrush="{StaticResource BorderPrimaryBrush}" BorderThickness="2" CornerRadius="10"
+                            Background="#FAFAFA" 
+                            Margin="0,0,0,20">
+                        <TextBlock Text="Аватар" Foreground="{StaticResource TextHintBrush}" 
                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
 
-                    <TextBlock Text="Ім'я/Прізвище" FontWeight="Heavy" FontSize="24" HorizontalAlignment="Center" Margin="0,0,0,15"/>
-                    <TextBlock Text="+38(0XX)XXXXXXX" HorizontalAlignment="Center" Margin="0,5"/>
-                    <TextBlock Text="email@mail.com" HorizontalAlignment="Center" Margin="0,5,0,30"/>
-
-                    <Button Content="Редагувати" Style="{StaticResource PrimaryButtonStyle}" Margin="0"/>
+                    <TextBlock Text="Ім'я/Прізвище" 
+                               FontWeight="Heavy" FontSize="24" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,0,0,15"/>
                     
+                    <TextBlock Text="+38(0XX)XXXXXXX" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,5"/>
+                    
+                    <TextBlock Text="email@mail.com" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,5,0,30"/>
+
+                    <Button Content="Редагувати" 
+                            Style="{StaticResource PrimaryButtonStyle}" 
+                            Margin="0"/>
                 </StackPanel>
             </Border>
+            <Button Style="{StaticResource PrimaryButtonStyle}" 
+                    Content="Додати нове оголошення" 
+                    PreviewMouseLeftButtonUp="CreateListing_Button"/>
+        </StackPanel>
+        
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/> 
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" 
+                    BorderBrush="{StaticResource BorderPrimaryBrush}" BorderThickness="0,0,0,2" 
+                    Margin="0,0,0,20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" 
+                           Content="Каталог:" 
+                           Style="{StaticResource SectionTitleLabelStyle}" 
+                           FontWeight="Heavy"/>
+                    
+                    <RadioButton Grid.Column="1" 
+                                 Content="Мої оголошення" 
+                                 Style="{StaticResource TabRadioButtonStyle}"/>
+                    
+                    <RadioButton Grid.Column="2" 
+                                 Content="Обране" 
+                                 Style="{StaticResource TabRadioButtonStyle}"/>
+                </Grid>
+            </Border>
             
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/> 
-                </Grid.RowDefinitions>
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl x:Name="AdsListHost">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
 
-                <Border Grid.Row="0" 
-                        BorderBrush="{StaticResource BorderPrimaryBrush}"
-                        BorderThickness="0,0,0,2">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Content="Каталог:" Style="{StaticResource SectionTitleLabelStyle}" FontWeight="Heavy"/>
-                        <RadioButton Grid.Column="1" Content="Мої оголошення" Style="{StaticResource TabRadioButtonStyle}"/>
-                        <RadioButton Grid.Column="2" Content="Обране" Style="{StaticResource TabRadioButtonStyle}"/>
-                    </Grid>
-                </Border>
-                
-                
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    
-                    <ItemsControl x:Name="AdsListHost">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource CardBorderStyle}" 
+                                    MaxWidth="300" MinWidth="250" 
+                                    Margin="0,0,20,20" Padding="15">
+                                <StackPanel>
+                                    <Border Height="180" 
+                                            Background="#FAFAFA" 
+                                            BorderBrush="{StaticResource BorderPrimaryBrush}" BorderThickness="1" CornerRadius="10" 
+                                            Margin="0,0,0,15">
+                                        
+                                        <TextBlock Text="Фото об'єкта" Foreground="{StaticResource TextHintBrush}" 
+                                                   VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Border>
+                                    
+                                    <TextBlock Text="{Binding Price, FallbackValue='Ціна'}" 
+                                               HorizontalAlignment="Center" 
+                                               FontWeight="Heavy" 
+                                               Margin="0,0,0,5"/>
+                                    <TextBlock Text="{Binding Details, FallbackValue='Кімнати/Площа'}" 
+                                               HorizontalAlignment="Center" 
+                                               Margin="0,0,0,5"/>
+                                    <TextBlock Text="{Binding Address, FallbackValue='Місто/Адреса'}" 
+                                               HorizontalAlignment="Center" 
+                                               Margin="0,0,0,20"/>
 
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Style="{StaticResource CardBorderStyle}" Width="300" Margin="0,0,20,20" Padding="15">
-                                    <StackPanel>
-                                        
-                                        <Border Height="180" Background="#FAFAFA" BorderBrush="{StaticResource BorderPrimaryBrush}" BorderThickness="1" CornerRadius="10" Margin="0,0,0,15">
-                                            <TextBlock Text="Фото об'єкта" Foreground="{StaticResource TextHintBrush}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                        </Border>
-                                        
-                                        <TextBlock Text="{Binding Price, FallbackValue='Ціна'}" HorizontalAlignment="Center" FontWeight="Heavy" Margin="0,0,0,5"/>
-                                        <TextBlock Text="{Binding Details, FallbackValue='Кімнати/Площа'}" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-                                        <TextBlock Text="{Binding Address, FallbackValue='Місто/Адреса'}" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Button Grid.Column="0" Content="Оновити" Style="{StaticResource PrimaryButtonStyle}" Margin="0,0,5,0" Padding="5"/>
-                                            <Button Grid.Column="1" Content="Видалити" Style="{StaticResource PrimaryButtonStyle}" Margin="5,0,0,0" Padding="5"/>
-                                        </Grid>
-                                        
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    
-                </ScrollViewer>
-            </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" 
+                                                Content="Оновити" 
+                                                Style="{StaticResource PrimaryButtonStyle}" 
+                                                Margin="0,0,5,0" Padding="5"/>
+                                        <Button Grid.Column="1" 
+                                                Content="Видалити" 
+                                                Style="{StaticResource PrimaryButtonStyle}" 
+                                                Margin="5,0,0,0" Padding="5"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
         </Grid>
+    </Grid>
 </UserControl>

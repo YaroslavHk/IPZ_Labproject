@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using RentalClient.Interface;
 
 namespace RentalClient.UserControls;
@@ -53,5 +54,9 @@ public partial class MainWindowView : UserControl, IViewInterface, IMainViewInte
     {
         NavigateTo(workplaceType);
     }
-    
+
+    private void HomeButton_Click(object sender, MouseButtonEventArgs e)
+    {
+        NavigateTo(WorkplaceType.Search);
+    }
 }
