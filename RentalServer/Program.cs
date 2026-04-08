@@ -5,11 +5,10 @@ using Microsoft.OpenApi;
 using RentalServer.Data;
 using RentalServer.Endpoints;
 using RentalServer.ExceptionHandeler;
-using RentalServer.Middlewares; // Убедись, что папка правильная
+using RentalServer.Middlewares; 
 using Serilog;
 using Serilog.Formatting.Compact;
 
-// Настройка Serilog (Пишет в консоль и в JSON-файл)
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .Enrich.FromLogContext()
@@ -19,7 +18,6 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Подключаем Serilog к хосту
 builder.Host.UseSerilog();
 
 string secretKey = builder.Configuration["Jwt:Key"] ?? "MySuperSecretKeyForDevelopmentOnly123!"; 
@@ -42,20 +40,17 @@ builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    // 1. Создаем схему (теперь без .Models)
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
         Description = "Введи токен в формате: Bearer {твой_токен}",
         In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey, // В .NET 10 рекомендуется использовать Http
+        Type = SecuritySchemeType.ApiKey,
         Scheme = "bearer",
         BearerFormat = "JWT"
     });
 
     
-    // 2. Создаем требование через лямбду (document => ...)
-    // И передаем только один аргумент "Bearer" в Reference
     options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
     {
         [new OpenApiSecuritySchemeReference("Bearer", document)] = []
@@ -66,7 +61,7 @@ builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
-// Включаем логирование запросов
+
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseSerilogRequestLogging();
 
