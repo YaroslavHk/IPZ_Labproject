@@ -5,7 +5,8 @@ using Microsoft.OpenApi;
 using RentalServer.Data;
 using RentalServer.Endpoints;
 using RentalServer.ExceptionHandeler;
-using RentalServer.Middlewares; 
+using RentalServer.Middlewares;
+using RentalServer.Models.Debug;
 using Serilog;
 using Serilog.Formatting.Compact;
 
@@ -64,12 +65,37 @@ var app = builder.Build();
 
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseSerilogRequestLogging();
+ 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<RentalDbContext>();
+    // Опционально: db.Database.EnsureCreated(); // Если хочешь, чтобы БД создавалась сама без миграций
+    await DatabaseSeeder.SeedAsync(db);
+} 
+
+if (args.Contains("--seed"))
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<RentalDbContext>();
+        
+        Console.WriteLine("Начинаю заполнение базы данных...");
+        await DatabaseSeeder.SeedAsync(db);
+        Console.WriteLine("Заполнение завершено. Выход из программы.");
+    }
+    
+    // Прерываем выполнение (сервер не будет запускаться, мы просто выполнили скрипт)
+    return; 
+}
+
+
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseAuthentication();
 app.UseAuthorization();

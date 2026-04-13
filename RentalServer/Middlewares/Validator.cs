@@ -11,7 +11,10 @@ public class CreateRentalRequestValidator : AbstractValidator<RentalRequest>
     {
         RuleFor(x => x.Title).NotEmpty().WithMessage("Title cannot be empty")
             .MinimumLength(5).WithMessage("Title is too short");
-                             
+        
+        RuleFor(x => x.RoomCount)
+            .GreaterThan(0).WithMessage("Room count must be at least 1");
+        
         RuleFor(x => x.Price).GreaterThan(0).WithMessage("Price must be greater than zero");
         
         RuleFor(x => x.City).NotEmpty().WithMessage("City is required");

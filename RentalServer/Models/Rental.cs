@@ -16,6 +16,8 @@ public class Rental
     
     public float LivingSpace{get; set;}
     
+    public int RoomCount { get; set; }
+    
 
     public Guid UserId { get; set; }
     

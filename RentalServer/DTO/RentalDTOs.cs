@@ -15,7 +15,7 @@ public class RentalDTOs
     public string Type { get; set; } = "";
     
     public float LivingSpace{get; set;}
-    
+    public float RoomCount { get; set; }
 
     public Guid UserId { get; set; }
     
@@ -32,6 +32,7 @@ public class ShortRentalResponse
     public string Type { get; set; } = "";
     public string Address { get; set; } = "";
     public float LivingSpace { get; set; }
+    public int RoomCount { get; set; }
     public Guid UserId { get; set; }
 }
 
@@ -44,6 +45,8 @@ public class RentalRequest
     public string City { get; set; } = "";
     
     public string Address { get; set; } = "";
+    
+    public int RoomCount { get; set; }
     public string Type { get; set; } = "";
     
     public float LivingSpace { get; set; }
