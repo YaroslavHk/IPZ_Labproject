@@ -1,24 +1,15 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using RentalClient.Interface;
+﻿using System.Windows.Controls;
+using RentalClient.ViewModels;
 
-namespace RentalClient.UserControls;
-
-public partial class SignInView : UserControl, IViewInterface
+namespace RentalClient.UserControls
 {
-    public event EventHandler<PageType> NavigationPageRequested;
-    public SignInView()
+    public partial class SignInView : UserControl
     {
-        InitializeComponent();
-    }
-
-    private void SignUpButton_Click(object sender, RoutedEventArgs e)
-    {
-        NavigationPageRequested?.Invoke(this, PageType.SignUp);
-    }
-    
-    private void BackToMainWindowButton_Click(object sender, RoutedEventArgs e)
-    {
-        NavigationPageRequested?.Invoke(this, PageType.Main);
+        public SignInView(SignInViewModel viewModel)
+        {
+            InitializeComponent();
+            
+            this.DataContext = viewModel;
+        }
     }
 }

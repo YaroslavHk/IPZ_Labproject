@@ -19,33 +19,31 @@
                 <StackPanel>
                     <Border Height="200" Width="200" 
                             BorderBrush="{StaticResource BorderPrimaryBrush}" BorderThickness="2" CornerRadius="10"
-                            Background="#FAFAFA" 
-                            Margin="0,0,0,20">
+                            Background="#FAFAFA" Margin="0,0,0,20">
                         <TextBlock Text="Аватар" Foreground="{StaticResource TextHintBrush}" 
                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
 
-                    <TextBlock Text="Ім'я/Прізвище" 
+                    <TextBlock Text="{Binding FullName}" 
                                FontWeight="Heavy" FontSize="24" 
-                               HorizontalAlignment="Center" 
-                               Margin="0,0,0,15"/>
+                               HorizontalAlignment="Center" Margin="0,0,0,15"/>
                     
-                    <TextBlock Text="+38(0XX)XXXXXXX" 
-                               HorizontalAlignment="Center" 
-                               Margin="0,5"/>
+                    <TextBlock Text="{Binding PhoneNumber}" 
+                               HorizontalAlignment="Center" Margin="0,5"/>
                     
-                    <TextBlock Text="email@mail.com" 
-                               HorizontalAlignment="Center" 
-                               Margin="0,5,0,30"/>
+                    <TextBlock Text="{Binding Email}" 
+                               HorizontalAlignment="Center" Margin="0,5,0,30"/>
 
                     <Button Content="Редагувати" 
                             Style="{StaticResource PrimaryButtonStyle}" 
+                            Command="{Binding EditProfileCommand}"
                             Margin="0"/>
                 </StackPanel>
             </Border>
-            <Button Style="{StaticResource PrimaryButtonStyle}" 
-                    Content="Додати нове оголошення" 
-                    PreviewMouseLeftButtonUp="CreateListing_Button"/>
+            
+            <Button Content="Додати нове оголошення" 
+                    Style="{StaticResource PrimaryButtonStyle}" 
+                    Command="{Binding CreateListingCommand}"/>
         </StackPanel>
         
         <Grid Grid.Column="1">
@@ -54,32 +52,31 @@
                 <RowDefinition Height="*"/> 
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" 
-                    BorderBrush="{StaticResource BorderPrimaryBrush}" BorderThickness="0,0,0,2" 
-                    Margin="0,0,0,20">
+            <Border Grid.Row="0" BorderBrush="{StaticResource BorderPrimaryBrush}" BorderThickness="0,0,0,2" Margin="0,0,0,20">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" 
-                           Content="Каталог:" 
-                           Style="{StaticResource SectionTitleLabelStyle}" 
-                           FontWeight="Heavy"/>
+                    
+                    <Label Grid.Column="0" Content="Каталог:" Style="{StaticResource SectionTitleLabelStyle}" FontWeight="Heavy"/>
                     
                     <RadioButton Grid.Column="1" 
                                  Content="Мої оголошення" 
+                                 IsChecked="{Binding IsMyAdsSelected}"
                                  Style="{StaticResource TabRadioButtonStyle}"/>
                     
                     <RadioButton Grid.Column="2" 
                                  Content="Обране" 
+                                 IsChecked="{Binding IsFavoritesSelected}"
                                  Style="{StaticResource TabRadioButtonStyle}"/>
                 </Grid>
             </Border>
             
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <ItemsControl x:Name="AdsListHost">
+                
+                <ItemsControl ItemsSource="{Binding UserAds}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel Orientation="Horizontal"/>
@@ -88,42 +85,37 @@
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Style="{StaticResource CardBorderStyle}" 
-                                    MaxWidth="300" MinWidth="250" 
-                                    Margin="0,0,20,20" Padding="15">
+                            <Border Style="{StaticResource CardBorderStyle}" MaxWidth="300" MinWidth="250" Margin="0,0,20,20" Padding="15">
                                 <StackPanel>
-                                    <Border Height="180" 
-                                            Background="#FAFAFA" 
-                                            BorderBrush="{StaticResource BorderPrimaryBrush}" BorderThickness="1" CornerRadius="10" 
-                                            Margin="0,0,0,15">
-                                        
-                                        <TextBlock Text="Фото об'єкта" Foreground="{StaticResource TextHintBrush}" 
-                                                   VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <Border Height="180" BorderBrush="{StaticResource BorderPrimaryBrush}" BorderThickness="1" CornerRadius="10" Margin="0,0,0,15">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="{Binding ImageUrl}" 
+                                                        Stretch="UniformToFill" />
+                                        </Border.Background>
                                     </Border>
                                     
-                                    <TextBlock Text="{Binding Price, FallbackValue='Ціна'}" 
-                                               HorizontalAlignment="Center" 
-                                               FontWeight="Heavy" 
-                                               Margin="0,0,0,5"/>
-                                    <TextBlock Text="{Binding Details, FallbackValue='Кімнати/Площа'}" 
-                                               HorizontalAlignment="Center" 
-                                               Margin="0,0,0,5"/>
-                                    <TextBlock Text="{Binding Address, FallbackValue='Місто/Адреса'}" 
-                                               HorizontalAlignment="Center" 
-                                               Margin="0,0,0,20"/>
+                                    <TextBlock Text="{Binding Price, FallbackValue='Ціна'}" HorizontalAlignment="Center" FontWeight="Heavy" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{Binding Title, FallbackValue='Назва'}" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{Binding Address, FallbackValue='Місто/Адреса'}" HorizontalAlignment="Center" Margin="0,0,0,20"/>
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
+                                        
                                         <Button Grid.Column="0" 
                                                 Content="Оновити" 
                                                 Style="{StaticResource PrimaryButtonStyle}" 
+                                                Command="{Binding DataContext.UpdateAdCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}"
                                                 Margin="0,0,5,0" Padding="5"/>
+                                                
                                         <Button Grid.Column="1" 
                                                 Content="Видалити" 
                                                 Style="{StaticResource PrimaryButtonStyle}" 
+                                                Command="{Binding DataContext.DeleteAdCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}"
                                                 Margin="5,0,0,0" Padding="5"/>
                                     </Grid>
                                 </StackPanel>

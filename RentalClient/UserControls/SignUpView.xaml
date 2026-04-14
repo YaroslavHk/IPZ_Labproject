@@ -4,17 +4,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:RentalClient"
+             xmlns:core="clr-namespace:RentalClient.Core"
              mc:Ignorable="d"
              Background="{StaticResource BackgroundGradientBrush}">
+    
+    <UserControl.Resources>
+        <core:MultiConverter x:Key="MultiConverter"/>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         
-        <Button Grid.Row="0" Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Left" PreviewMouseLeftButtonUp="BackToMainWindowButton_Click" Content="Back"/>
+        <Button Grid.Row="0" 
+                Content="Back"
+                Style="{StaticResource PrimaryButtonStyle}" 
+                HorizontalAlignment="Left" 
+                Command="{Binding BackToMainWindowCommand}" />
         
-        <Border Grid.Row="1" Style="{StaticResource AuthCardBorderStyle}" MaxWidth="500" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="30">
+        <Border Grid.Row="1" 
+                Style="{StaticResource AuthCardBorderStyle}" 
+                Width="500" Height="600" 
+                Padding="30">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -24,41 +37,63 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
             
                 <Label Grid.Row="0" 
-                       Style="{StaticResource AuthTitleLabelStyle}" 
-                       Content="Реєстрація"/>
+                       Content="Реєстрація"
+                       Style="{StaticResource AuthTitleLabelStyle}" />
                 
                 <TextBox Grid.Row="1" 
-                         Style="{StaticResource AuthTextBoxStyle}" 
                          Tag="Ім'я" 
+                         Style="{StaticResource AuthTextBoxStyle}" 
+                         Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"
                          local:Designer.IsMonitoring="True"/>
                 
                 <TextBox Grid.Row="2" 
+                         Tag="Email" 
                          Style="{StaticResource AuthTextBoxStyle}" 
-                         Tag="Телефон або Email" 
+                         Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
                          local:Designer.IsMonitoring="True"/>
                 
-                <PasswordBox Grid.Row="3" 
-                             Style="{StaticResource BasePasswordBoxStyle}" 
-                             Tag="Введіть пароль" 
-                             local:Designer.IsMonitoring="True"/>
+                <TextBox Grid.Row="3"
+                         Tag="Телефон" 
+                         Style="{StaticResource AuthTextBoxStyle}" 
+                         Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" />
                 
                 <PasswordBox Grid.Row="4" 
+                             x:Name="PasswordBox"
+                             Tag="Введіть пароль" 
                              Style="{StaticResource BasePasswordBoxStyle}" 
-                             Tag="Підтвердіть пароль" 
                              local:Designer.IsMonitoring="True"/>
                 
-                <Button Grid.Row="5" 
+                <PasswordBox Grid.Row="5" 
+                             x:Name="PasswordConfirmationBox"
+                             Tag="Підтвердіть пароль" 
+                             Style="{StaticResource BasePasswordBoxStyle}" 
+                             local:Designer.IsMonitoring="True"/>
+                
+                <Button Grid.Row="6" 
+                        Content="Зареєструватися"
                         Style="{StaticResource PrimaryButtonStyle}" 
                         Margin="0,20,0,10" 
-                        Content="Зареєструватися"/>
+                        Command="{Binding RegisterCommand}">
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource MultiConverter}">
+                            <Binding ElementName="PasswordBox"/>
+                            <Binding ElementName="PasswordConfirmationBox"/>
+                        </MultiBinding>
+                    </Button.CommandParameter>
+                </Button>
                 
-                <TextBlock Grid.Row="6" 
-                           Style="{StaticResource ActionLinkTextStyle}" 
+                <TextBlock Grid.Row="7" 
                            Text="Вже є акаунт? Увійти" 
-                           MouseLeftButtonDown="SignInButton_Click"/>
+                           Style="{StaticResource ActionLinkTextStyle}" 
+                           VerticalAlignment="Bottom">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Gesture="LeftClick" Command="{Binding SwitchSignCommand}" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
             </Grid>
         </Border>
     </Grid>

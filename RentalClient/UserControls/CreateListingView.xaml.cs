@@ -1,14 +1,15 @@
 ﻿using System.Windows.Controls;
-using RentalClient.Interface;
+using RentalClient.ViewModels;
 
-namespace RentalClient.UserControls;
-
-public partial class CreateListingView : UserControl, IMainViewInterface
+namespace RentalClient.UserControls
 {
-    public event EventHandler<WorkplaceType> NavigationWorkplaceRequested;
-    
-    public CreateListingView()
+    public partial class CreateListingView : UserControl
     {
-        InitializeComponent();
+        public CreateListingView(CreateListingViewModel viewModel)
+        {
+            InitializeComponent();
+            
+            this.DataContext = viewModel;
+        }
     }
 }

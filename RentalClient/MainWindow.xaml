@@ -5,9 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RentalClient"
         mc:Ignorable="d"
-        Title="HouseFind" MinHeight="450" MinWidth="1000"
-        WindowState="Maximized">
-    
-    <ContentControl x:Name="MainHost"></ContentControl>
-    
+        Title="HouseFind" MinHeight="450" MinWidth="1000" WindowState="Maximized">
+    <ContentControl Content="{Binding CurrentRootView}" />
 </Window>

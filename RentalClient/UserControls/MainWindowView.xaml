@@ -8,39 +8,40 @@
              Background="{StaticResource BackgroundBrush}">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
         
-        <!--Header-->
         <Grid Grid.Row="0" Margin="20,10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             
             <Label Grid.Column="0" 
                    Content="House Find" 
                    Style="{StaticResource LogoLabelStyle}" 
-                   MouseLeftButtonUp="HomeButton_Click" 
-                   VerticalAlignment="Center"/>
+                   VerticalAlignment="Center">
+                <Label.InputBindings>
+                    <MouseBinding Gesture="LeftClick" Command="{Binding HomeCommand}" />
+                </Label.InputBindings>
+            </Label>
             
             <TextBox Grid.Column="1" 
-                     HorizontalAlignment="Stretch" 
-                     VerticalContentAlignment="Center" 
-                     Margin="30,0" 
                      Style="{StaticResource RoundTextBoxStyle}" 
-                     local:Designer.IsMonitoring="True" 
-                     Tag="ПОШУК ЗА МІСТОМ/АДРЕСОЮ..."/>
+                     Tag="ПОШУК ЗА МІСТОМ/АДРЕСОЮ..."
+                     HorizontalAlignment="Stretch" VerticalContentAlignment="Center" 
+                     Margin="30,0" 
+                     local:Designer.IsMonitoring="True" />
             
             <Button Grid.Column="2" 
-                    Style="{StaticResource PrimaryButtonStyle}" 
                     Content="Профіль" 
-                    PreviewMouseLeftButtonUp="ProfileButton_Click" 
-                    VerticalAlignment="Center"/>
+                    Style="{StaticResource PrimaryButtonStyle}" 
+                    Command="{Binding ProfileCommand}" 
+                    VerticalAlignment="Center" />
         </Grid>
         
-        <ContentControl Grid.Row="1" x:Name="WorkplaceHost"/>
+        <ContentControl Grid.Row="1" Content="{Binding CurrentWorkplaceView}" />
     </Grid>
 </UserControl>

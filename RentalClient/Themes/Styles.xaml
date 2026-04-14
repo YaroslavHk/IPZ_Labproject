@@ -94,23 +94,29 @@
     <Style x:Key="FilterToggleButtonStyle" TargetType="ToggleButton" BasedOn="{StaticResource BaseControlStyle}">
         <Setter Property="BorderBrush" Value="SlateGray"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Margin" Value="1,5"/>
+        <Setter Property="Padding" Value="15,8"/>
     </Style>
 
     <Style x:Key="TabRadioButtonStyle" TargetType="RadioButton" BasedOn="{StaticResource BaseControlStyle}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Padding" Value="15,8"/>
         <Setter Property="Margin" Value="10"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
                     <Border x:Name="TabBorder"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
                         <ContentPresenter x:Name="TabContent"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          Margin="{TemplateBinding Margin}"/>
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -169,7 +175,7 @@
         <Setter Property="local:Designer.CornerRadius" Value="0"/>
         <Setter Property="BorderBrush" Value="{StaticResource BorderSecondaryBrush}"/> 
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Padding" Value="5,2"/>
+        <Setter Property="Padding" Value="0,2"/>
     </Style>
 
     <Style x:Key="BasePasswordBoxStyle" TargetType="PasswordBox" BasedOn="{StaticResource BaseControlStyle}">

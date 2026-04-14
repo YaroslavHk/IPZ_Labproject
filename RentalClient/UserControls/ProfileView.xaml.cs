@@ -1,20 +1,14 @@
 ﻿using System.Windows.Controls;
-using System.Windows.Input;
-using RentalClient.Interface;
+using RentalClient.ViewModels;
 
-namespace RentalClient.UserControls;
-
-public partial class ProfileView : UserControl, IMainViewInterface
+namespace RentalClient.UserControls
 {
-    public event EventHandler<WorkplaceType> NavigationWorkplaceRequested;
-    
-    public ProfileView()
+    public partial class ProfileView : UserControl
     {
-        InitializeComponent();
-    }
-
-    private void CreateListing_Button(object sender, MouseButtonEventArgs e)
-    {
-        NavigationWorkplaceRequested?.Invoke(this, WorkplaceType.CreateListing);
+        public ProfileView(ProfileViewModel viewModel)
+        {
+            InitializeComponent();
+            this.DataContext = viewModel;
+        }
     }
 }

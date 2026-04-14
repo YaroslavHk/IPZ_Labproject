@@ -1,14 +1,15 @@
 ﻿using System.Windows.Controls;
-using RentalClient.Interface;
+using RentalClient.ViewModels;
 
-namespace RentalClient.UserControls;
-
-public partial class SearchView : UserControl, IMainViewInterface
+namespace RentalClient.UserControls
 {
-    public event EventHandler<WorkplaceType> NavigationWorkplaceRequested;
-    public SearchView()
+    public partial class SearchView : UserControl
     {
-        InitializeComponent();
+        public SearchView(SearchViewModel viewModel)
+        {
+            InitializeComponent();
+            
+            this.DataContext = viewModel;
+        }
     }
-    
 }

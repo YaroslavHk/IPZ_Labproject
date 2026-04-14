@@ -13,14 +13,14 @@
         </Grid.RowDefinitions>
         
         <Button Grid.Row="0" 
+                Content="Back"
                 Style="{StaticResource PrimaryButtonStyle}" 
                 HorizontalAlignment="Left" 
-                PreviewMouseLeftButtonUp="BackToMainWindowButton_Click" 
-                Content="Back"/>
+                Command="{Binding BackToMainWindowCommand}" />
         
         <Border Grid.Row="1" 
                 Style="{StaticResource AuthCardBorderStyle}"
-                MaxWidth="500" 
+                Width="500" Height="600"
                 Padding="30">
             <Grid>
                 <Grid.RowDefinitions>
@@ -28,32 +28,40 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
             
                 <Label Grid.Row="0" 
-                       Style="{StaticResource AuthTitleLabelStyle}" 
-                       Content="Вхід"/>
+                       Content="Вхід"
+                       Style="{StaticResource AuthTitleLabelStyle}" />
                 
                 <TextBox Grid.Row="1"
-                         Style="{StaticResource AuthTextBoxStyle}"
                          Tag="Телефон або Email" 
+                         Style="{StaticResource AuthTextBoxStyle}"
+                         Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
                          local:Designer.IsMonitoring="True"/>
                 
                 <PasswordBox Grid.Row="2" 
-                             Style="{StaticResource BasePasswordBoxStyle}" 
+                             x:Name="PasswordBox"
                              Tag="Пароль" 
+                             Style="{StaticResource BasePasswordBoxStyle}" 
                              local:Designer.IsMonitoring="True"/>
                 
                 <Button Grid.Row="3" 
+                        Content="Увійти"
                         Style="{StaticResource PrimaryButtonStyle}" 
-                        Margin="0,20,0,10" 
-                        Content="Увійти"/>
+                        Margin="0,20,0,10"
+                        Command="{Binding LoginCommand}"
+                        CommandParameter="{Binding ElementName=PasswordBox}"/>
                 
                 <TextBlock Grid.Row="4" 
-                           Style="{StaticResource ActionLinkTextStyle}" 
                            Text="Немає акаунту? Створити акаунт" 
-                           MouseLeftButtonDown="SignUpButton_Click"/>
+                           Style="{StaticResource ActionLinkTextStyle}" 
+                           VerticalAlignment="Bottom">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Gesture="LeftClick" Command="{Binding SwitchSignCommand}" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
             </Grid>
         </Border>
     </Grid>

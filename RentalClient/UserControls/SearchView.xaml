@@ -14,12 +14,10 @@
         
         <Border Grid.Column="0" 
                 Style="{StaticResource CardBorderStyle}" 
-                MinWidth="280" 
-                HorizontalAlignment="Left">
+                MinWidth="280" HorizontalAlignment="Left">
             <StackPanel Margin="15">
                 <Label Style="{StaticResource SectionTitleLabelStyle}" 
-                       FontWeight="Heavy" 
-                       Content="Фільтр" Margin="0,0,0,15"/>
+                       FontWeight="Heavy" Content="Фільтр" Margin="0,0,0,15"/>
                 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -33,73 +31,65 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     
-                    <Label Grid.Row="0" Grid.Column="0" 
-                           Style="{StaticResource SectionTitleLabelStyle}" 
-                           Content="Ціна" 
-                           Margin="0,0,10,10"/>
-                    
-                    <StackPanel Grid.Row="0" Grid.Column="1" 
-                                Orientation="Horizontal" 
-                                HorizontalAlignment="Right" 
-                                Margin="0,0,0,10">
-                        
-                        <TextBox MinWidth="60" Style="{StaticResource FilterTextBoxStyle}"/>
+                    <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource SectionTitleLabelStyle}" Content="Ціна" Margin="0,0,10,10"/>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBox MinWidth="60" Style="{StaticResource FilterTextBoxStyle}" Text="{Binding MinPrice, UpdateSourceTrigger=PropertyChanged}"/>
                         <Label Style="{StaticResource SectionTitleLabelStyle}" Content="-" Margin="5,0"/>
-                        <TextBox MinWidth="60" Style="{StaticResource FilterTextBoxStyle}"/>
+                        <TextBox MinWidth="60" Style="{StaticResource FilterTextBoxStyle}" Text="{Binding MaxPrice, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                     
-                    <Label Grid.Row="1" Grid.Column="0" 
-                           Style="{StaticResource SectionTitleLabelStyle}" 
-                           Content="Кімнати:" 
-                           Margin="0,0,10,10"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" 
-                             MinWidth="60" HorizontalAlignment="Center" 
-                             Style="{StaticResource FilterTextBoxStyle}" 
-                             Margin="0,0,0,10"/>
+                    <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource SectionTitleLabelStyle}" Content="Кімнати:" Margin="0,0,10,10"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource FilterTextBoxStyle}" Margin="2,10" Text="{Binding Rooms, UpdateSourceTrigger=PropertyChanged}"/>
                     
-                    <Label Grid.Row="2" Grid.Column="0" 
-                           Style="{StaticResource SectionTitleLabelStyle}" 
-                           Content="Тип:" 
-                           Margin="0,0,10,10"/>
-                    
-                    <StackPanel Grid.Row="2" Grid.Column="1" 
-                                HorizontalAlignment="Right" 
-                                Margin="0,0,0,10">
-                        
-                        <ToggleButton MinWidth="120" 
-                                      Style="{StaticResource FilterToggleButtonStyle}" 
-                                      Content="Квартира" 
-                                      Margin="0,0,0,5"/>
-                        
-                        <ToggleButton MinWidth="120"
-                                      Style="{StaticResource FilterToggleButtonStyle}" 
-                                      Content="Будинок"/>
+                    <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource SectionTitleLabelStyle}" Content="Тип:" Margin="0,0,10,10"/>
+                    <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,0,0,10">
+                        <ToggleButton MinWidth="120" Style="{StaticResource FilterToggleButtonStyle}" Content="Квартира" IsChecked="{Binding IsApartment}"/>
+                        <ToggleButton MinWidth="120" Style="{StaticResource FilterToggleButtonStyle}" Content="Будинок" IsChecked="{Binding IsHouse}"/>
                     </StackPanel>
                     
-                    <Label Grid.Row="3" Grid.Column="0" 
-                           Style="{StaticResource SectionTitleLabelStyle}" 
-                           Content="Площа:" 
-                           Margin="0,0,10,10"/>
-                    <StackPanel Grid.Row="3" Grid.Column="1" 
-                                Orientation="Horizontal" 
-                                HorizontalAlignment="Right" 
-                                Margin="0,0,0,10">
-                        
-                        <TextBox MinWidth="60" 
-                                 Style="{StaticResource FilterTextBoxStyle}"/>
-                        
-                        <Label Style="{StaticResource SectionTitleLabelStyle}" 
-                               Content="-" Margin="5,0"/>
-                        
-                        <TextBox MinWidth="60" 
-                                 Style="{StaticResource FilterTextBoxStyle}"/>
+                    <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource SectionTitleLabelStyle}" Content="Площа:" Margin="0,0,10,10"/>
+                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBox MinWidth="60" Style="{StaticResource FilterTextBoxStyle}" Text="{Binding MinSpace, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Label Style="{StaticResource SectionTitleLabelStyle}" Content="-" Margin="5,0"/>
+                        <TextBox MinWidth="60" Style="{StaticResource FilterTextBoxStyle}" Text="{Binding MaxSpace, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </Grid>
                 
                 <Button Content="ЗАСТОСУВАТИ" 
                         Style="{StaticResource PrimaryButtonStyle}" 
+                        Command="{Binding ApplyFilterCommand}"
                         Margin="0,20,0,0"/>
             </StackPanel>
         </Border>
+        
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            
+            <ItemsControl ItemsSource="{Binding Rentals}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource CardBorderStyle}" MinWidth="250" Height="300" MaxWidth="450" Margin="10" Padding="10">
+                            <StackPanel>
+                                <Border Height="180" BorderBrush="{StaticResource BorderPrimaryBrush}" BorderThickness="1" CornerRadius="10" Margin="0,0,0,15">
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="{Binding ImageUrl}" 
+                                                    Stretch="UniformToFill" />
+                                    </Border.Background>
+                                </Border>
+                                    
+                                <TextBlock Text="{Binding Price, FallbackValue='Ціна'}" HorizontalAlignment="Center" FontWeight="Heavy" Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding Title, FallbackValue='Назва'}" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding City, FallbackValue='Місто'}" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </UserControl>
