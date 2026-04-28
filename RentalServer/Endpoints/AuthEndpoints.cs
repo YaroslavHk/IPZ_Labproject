@@ -19,13 +19,20 @@ public static class AuthEndpoints
         {
             if (await db.Users.AnyAsync(U => U.Email == request.Email))
             {
-                return Results.BadRequest(new { Message = "User with that Username already exists." });
+                return Results.BadRequest(new { Message = "User with that Email already exists." });
             }
             
             if (await db.Users.AnyAsync(U => U.Username == request.UserName))
             {
                 return Results.BadRequest(new { Message = "User with that Username already exists." });
             }
+            
+            if (request.Password.Length < 8 || !request.Password.Any(char.IsDigit))
+            {
+                return Results.BadRequest(new { Message = "Password must contain at least 8 characters." });
+            }
+            
+            
             
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
@@ -74,7 +81,58 @@ public static class AuthEndpoints
 
             string jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-            return Results.Ok(new AuthResponse { Token = jwt });
+            return Results.Ok(new AuthResponse
+            {
+                Token = jwt,
+                UserId = user.UserId,
+                UserName = user.Username,
+                Email = user.Email,
+                phone = user.Phone,
+            });
         });
+        
+        // Используем PATCH для частичного обновления (Independent Updates)
+        group.MapPatch("/profile", async (UpdateProfileRequest request, RentalDbContext db, ClaimsPrincipal user) =>
+        {
+
+            var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null) return Results.Unauthorized();
+    
+            var userId = Guid.Parse(userIdClaim.Value);
+    
+            // 2. Ищем пользователя в БД
+            var dbUser = await db.Users.FindAsync(userId);
+            if (dbUser == null) return Results.NotFound(new { Message = "Пользователь не найден" });
+
+
+            if (!string.IsNullOrWhiteSpace(request.Phone))
+            {
+                dbUser.Phone = request.Phone;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.UserName))
+            {
+                dbUser.Username = request.UserName;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.Email))
+            {
+                dbUser.Email = request.Email;
+            }
+
+            // 4. Сохраняем изменения
+            await db.SaveChangesAsync();
+    
+            return Results.Ok(new 
+            { 
+                Message = "Profile updated",
+                UpdatedFields = new { 
+                    Phone = request.Phone != null ? "Updated" : "Kept original",
+                    FullName = request.UserName != null ? "Updated" : "Kept original",
+                    Email = request.Email != null ? "Updated" : "Kept original",
+                }
+            });
+        }).RequireAuthorization();
+        
     }
 }

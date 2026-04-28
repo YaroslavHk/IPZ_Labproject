@@ -3,27 +3,18 @@
 public class Rental
 {
     public Guid Id { get; set; }
-    
     public string Title { get; set; } = "";
     public string Description { get; set; } = "";
-    
     public decimal Price { get; set; }
-    
     public string City { get; set; } = "";
     public string Address { get; set; } = "";
-    
     public string Type { get; set; } = "";
-    
     public float LivingSpace{get; set;}
-    
     public int RoomCount { get; set; }
-    
-
     public Guid UserId { get; set; }
-    
     public DateTime Created { get; set; }
     public DateTime LastModified { get; set; }
-    
     public bool IsRentedOut { get; set; }
     public bool IsHidden { get; set; }
+    public List<RentalImage> Images { get; set; } = new();
 }

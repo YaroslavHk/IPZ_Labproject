@@ -9,6 +9,7 @@ using RentalServer.Middlewares;
 using RentalServer.Models.Debug;
 using Serilog;
 using Serilog.Formatting.Compact;
+using Microsoft.AspNetCore.HttpOverrides;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -21,9 +22,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog();
 
-string secretKey = builder.Configuration["Jwt:Key"] ?? "MySuperSecretKeyForDevelopmentOnly123!"; 
-
 builder.Services.AddSqlite<RentalDbContext>("Data Source=rentals_v2.db");
+
+string secretKey = builder.Configuration["Jwt:Key"] ?? "MySuperSecretKeyForDevelopmentOnly123!"; 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -60,18 +61,23 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-var app = builder.Build();
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    // Указываем, какие именно заголовки мы хотим читать
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | 
+                               ForwardedHeaders.XForwardedProto | 
+                               ForwardedHeaders.XForwardedHost;
+    
+    // Для безопасности ASP.NET по умолчанию доверяет только локальным прокси. 
+    // Очищаем списки, чтобы доверять туннелю Ngrok:
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
 
+var app = builder.Build();
 
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseSerilogRequestLogging();
- 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<RentalDbContext>();
-    // Опционально: db.Database.EnsureCreated(); // Если хочешь, чтобы БД создавалась сама без миграций
-    await DatabaseSeeder.SeedAsync(db);
-} 
 
 if (args.Contains("--seed"))
 {
@@ -88,18 +94,18 @@ if (args.Contains("--seed"))
     return; 
 }
 
-
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-
+app.UseForwardedHeaders();
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseExceptionHandler();
+
 
 app.MapRentalEndpoints();
 app.MapAuthEndpoints(app.Configuration);

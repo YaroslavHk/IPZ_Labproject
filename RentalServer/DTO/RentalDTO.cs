@@ -1,6 +1,6 @@
 ﻿namespace RentalServer.DTO;
 
-public class RentalDTOs
+public class RentalDTO
 {
     public Guid Id { get; set; }
     
@@ -21,6 +21,8 @@ public class RentalDTOs
     
     public DateTime Created { get; set; }
     public DateTime LastModified { get; set; }
+    
+    public List<string> FullImageUrls  { get; set; }
 }
 
 public class ShortRentalResponse
@@ -34,6 +36,8 @@ public class ShortRentalResponse
     public float LivingSpace { get; set; }
     public int RoomCount { get; set; }
     public Guid UserId { get; set; }
+    public string? MainThumbnailUrl  { get; set; }
+    
 }
 
 public class RentalRequest

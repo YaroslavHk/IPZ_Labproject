@@ -12,7 +12,6 @@ public class RequestLoggingMiddleware
         _next = next;
         _logger = logger;
     }
-
     public async Task InvokeAsync(HttpContext context)
     {
         context.Request.EnableBuffering();
