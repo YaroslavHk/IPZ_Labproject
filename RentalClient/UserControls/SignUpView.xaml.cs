@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using RentalClient.ViewModels;
 
 namespace RentalClient.UserControls
@@ -8,8 +9,23 @@ namespace RentalClient.UserControls
         public SignUpView(SignUpViewModel viewModel)
         {
             InitializeComponent();
-            
-            this.DataContext = viewModel;
+            DataContext = viewModel;
+        }
+
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext is SignUpViewModel viewModel)
+            {
+                viewModel.CurrentPassword = ((PasswordBox)sender).Password;
+            }
+        }
+
+        private void ConfirmPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext is SignUpViewModel viewModel)
+            {
+                viewModel.CurrentConfirmPassword = ((PasswordBox)sender).Password;
+            }
         }
     }
 }

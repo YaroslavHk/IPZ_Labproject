@@ -3,8 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:RentalClient">
     <Application.Resources>
-         <ResourceDictionary>
-             <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+            <ResourceDictionary.MergedDictionaries>
                  <ResourceDictionary Source="Themes/Colors.xaml"/>
                  <ResourceDictionary Source="Themes/BaseStyles.xaml"/>
                  <ResourceDictionary Source="Themes/Styles.xaml"/>

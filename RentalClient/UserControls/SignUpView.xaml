@@ -37,58 +37,47 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
             
-                <Label Grid.Row="0" 
-                       Content="Реєстрація"
-                       Style="{StaticResource AuthTitleLabelStyle}" />
+                <Label Grid.Row="0" Content="Реєстрація" Style="{StaticResource AuthTitleLabelStyle}" />
                 
-                <TextBox Grid.Row="1" 
-                         Tag="Ім'я" 
-                         Style="{StaticResource AuthTextBoxStyle}" 
-                         Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"
-                         local:Designer.IsMonitoring="True"/>
+                <TextBox Grid.Row="1" Tag="Ім'я" Style="{StaticResource AuthTextBoxStyle}" 
+                         Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}" core:Designer.IsMonitoring="True"/>
                 
-                <TextBox Grid.Row="2" 
-                         Tag="Email" 
-                         Style="{StaticResource AuthTextBoxStyle}" 
-                         Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
-                         local:Designer.IsMonitoring="True"/>
+                <TextBox Grid.Row="2" Tag="Email" Style="{StaticResource AuthTextBoxStyle}" 
+                         Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" core:Designer.IsMonitoring="True"/>
                 
-                <TextBox Grid.Row="3"
-                         Tag="Телефон" 
-                         Style="{StaticResource AuthTextBoxStyle}" 
-                         Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="3" Tag="Телефон" Style="{StaticResource AuthTextBoxStyle}" 
+                         Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" core:Designer.IsMonitoring="True"/>
                 
-                <PasswordBox Grid.Row="4" 
-                             x:Name="PasswordBox"
-                             Tag="Введіть пароль" 
-                             Style="{StaticResource BasePasswordBoxStyle}" 
-                             local:Designer.IsMonitoring="True"/>
+                <PasswordBox Grid.Row="4" x:Name="PasswordBox" Tag="Введіть пароль" 
+                             Style="{StaticResource BasePasswordBoxStyle}" core:Designer.IsMonitoring="True"
+                             PasswordChanged="PasswordBox_PasswordChanged"/>
                 
-                <PasswordBox Grid.Row="5" 
-                             x:Name="PasswordConfirmationBox"
-                             Tag="Підтвердіть пароль" 
-                             Style="{StaticResource BasePasswordBoxStyle}" 
-                             local:Designer.IsMonitoring="True"/>
+                <PasswordBox Grid.Row="5" x:Name="PasswordConfirmationBox" Tag="Підтвердіть пароль" 
+                             Style="{StaticResource BasePasswordBoxStyle}" core:Designer.IsMonitoring="True"
+                             PasswordChanged="ConfirmPasswordBox_PasswordChanged"/>
                 
-                <Button Grid.Row="6" 
-                        Content="Зареєструватися"
-                        Style="{StaticResource PrimaryButtonStyle}" 
-                        Margin="0,20,0,10" 
-                        Command="{Binding RegisterCommand}">
-                    <Button.CommandParameter>
-                        <MultiBinding Converter="{StaticResource MultiConverter}">
-                            <Binding ElementName="PasswordBox"/>
-                            <Binding ElementName="PasswordConfirmationBox"/>
-                        </MultiBinding>
-                    </Button.CommandParameter>
+                <TextBlock Grid.Row="6" Text="{Binding PasswordErrorMessage}" 
+                           Foreground="#D9534F" FontWeight="SemiBold" FontSize="12" 
+                           HorizontalAlignment="Center" Margin="0,5,0,0" TextWrapping="Wrap"/>
+                
+                <Button Grid.Row="7" Content="Зареєструватися" Margin="0,15,0,10" Command="{Binding RegisterCommand}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+                            <Style.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Background" Value="#6c757d" /> 
+                                    <Setter Property="Foreground" Value="#cfcfcf" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
                 </Button>
                 
-                <TextBlock Grid.Row="7" 
-                           Text="Вже є акаунт? Увійти" 
-                           Style="{StaticResource ActionLinkTextStyle}" 
+                <TextBlock Grid.Row="8" Text="Вже є акаунт? Увійти" Style="{StaticResource ActionLinkTextStyle}" 
                            VerticalAlignment="Bottom">
                     <TextBlock.InputBindings>
                         <MouseBinding Gesture="LeftClick" Command="{Binding SwitchSignCommand}" />

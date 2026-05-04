@@ -4,7 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:RentalClient.UserControls"
+             xmlns:core="clr-namespace:RentalClient.Core"
              mc:Ignorable="d">
+    
+    <UserControl.Resources>
+        <core:NgrokImageConverter x:Key="NgrokConverter"/>
+    </UserControl.Resources>
     
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
@@ -59,37 +64,104 @@
                         Style="{StaticResource PrimaryButtonStyle}" 
                         Command="{Binding ApplyFilterCommand}"
                         Margin="0,20,0,0"/>
+                
+                <Button Content="ОЧИСТИТИ" 
+                        Style="{StaticResource PrimaryButtonStyle}" 
+                        Command="{Binding ClearFiltersCommand}"
+                        Margin="0,20,0,0"/>
             </StackPanel>
         </Border>
         
-        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            
-            <ItemsControl ItemsSource="{Binding Rentals}">
-                <ItemsControl.ItemsPanel>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <Label Style="{StaticResource SectionTitleLabelStyle}" 
+                       Content="{Binding Rentals.Count}" 
+                       ContentStringFormat="Результати пошуку: {0}"/>
+                <StackPanel Orientation="Horizontal">
+                    <Label Style="{StaticResource SectionTitleLabelStyle}" Content="Сортувати за:"/>
+                    <RadioButton GroupName="Sort" Style="{StaticResource TabRadioButtonStyle}" Content="Ціна" IsChecked="{Binding PriceSort}"/>
+                    <RadioButton GroupName="Sort" Style="{StaticResource TabRadioButtonStyle}" Content="Площа" IsChecked="{Binding SpaceSort}"/>
+                    <RadioButton GroupName="Sort" Style="{StaticResource TabRadioButtonStyle}" Content="Кількість кімнат" IsChecked="{Binding RoomsCountSort}"/>
+                    <ToggleButton Style="{StaticResource SortDirectionToggleButtonStyle}"
+                                  IsChecked="{Binding IsSortDescending}" 
+                                  Margin="10,0,0,0"/>
+                </StackPanel>
+            </StackPanel>
+            <Grid Grid.Row="1">
+                <ListBox ItemsSource="{Binding Rentals}" 
+                     Background="Transparent"
+                     BorderThickness="0"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                     
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Focusable" Value="False"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <ContentPresenter/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+
+                <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal"/>
                     </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                
-                <ItemsControl.ItemTemplate>
+                </ListBox.ItemsPanel>
+
+                <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Border Style="{StaticResource CardBorderStyle}" MinWidth="250" Height="300" MaxWidth="450" Margin="10" Padding="10">
+                        <Border Style="{StaticResource CardBorderStyle}" 
+                                MinWidth="250" Height="300" MaxWidth="450" Margin="10" Padding="10"
+                                Cursor="Hand">
+                            <Border.InputBindings>
+                                <MouseBinding Gesture="LeftClick" 
+                                              Command="{Binding DataContext.OpenListingCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                              CommandParameter="{Binding Id}" />
+                            </Border.InputBindings>
                             <StackPanel>
                                 <Border Height="180" BorderBrush="{StaticResource BorderPrimaryBrush}" BorderThickness="1" CornerRadius="10" Margin="0,0,0,15">
                                     <Border.Background>
-                                        <ImageBrush ImageSource="{Binding ImageUrl}" 
+                                        <ImageBrush ImageSource="{Binding ImageUrl, Converter={StaticResource NgrokConverter}, IsAsync=True}" 
                                                     Stretch="UniformToFill" />
                                     </Border.Background>
                                 </Border>
-                                    
+                                
                                 <TextBlock Text="{Binding Price, FallbackValue='Ціна'}" HorizontalAlignment="Center" FontWeight="Heavy" Margin="0,0,0,5"/>
                                 <TextBlock Text="{Binding Title, FallbackValue='Назва'}" HorizontalAlignment="Center" Margin="0,0,0,5"/>
                                 <TextBlock Text="{Binding City, FallbackValue='Місто'}" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+                </ListBox.ItemTemplate>
+            </ListBox>
+                
+                <Grid Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+          
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ProgressBar IsIndeterminate="True" 
+                                     Width="100" Height="10" 
+                                     Margin="0,0,0,15"
+                                     Foreground="#A0C8FC" Background="Transparent" BorderThickness="0"/>
+            
+                        <TextBlock Text="Завантаження..." 
+                                   FontWeight="Bold" Foreground="#555555" 
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Grid>
+        
     </Grid>
 </UserControl>

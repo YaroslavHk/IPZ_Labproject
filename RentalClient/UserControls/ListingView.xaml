@@ -1,0 +1,129 @@
+﻿<UserControl x:Class="RentalClient.UserControls.ListingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:RentalClient.UserControls"
+             xmlns:core="clr-namespace:RentalClient.Core"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="1000"
+             Background="{StaticResource BackgroundBrush}">
+    
+    <UserControl.Resources>
+        <core:NgrokImageConverter x:Key="NgrokConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid Margin="40,30,40,40">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> 
+                <RowDefinition Height="*"/>    
+            </Grid.RowDefinitions>
+            
+            <Button Grid.Row="0"
+                    Style="{StaticResource PrimaryButtonStyle}" 
+                    Content="← НАЗАД ДО ПОШУКУ"
+                    Command="{Binding GoBackCommand}"
+                    HorizontalAlignment="Left"
+                    Margin="0,0,0,30"/>
+            
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.2*"/> 
+                    <ColumnDefinition Width="50"/>   
+                    <ColumnDefinition Width="1*"/>   
+                </Grid.ColumnDefinitions>
+                
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Border Grid.Row="0" 
+                            BorderBrush="#A0C8FC" BorderThickness="2" CornerRadius="8"
+                            Background="#FAFAFA"
+                            Margin="0,0,0,15" MinHeight="300">
+                        <Grid>
+                            <TextBlock Text="ФОТО ВІДСУТНЄ" 
+                                       Foreground="#AAAAAA" FontWeight="Medium"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        
+                            <Border CornerRadius="6">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{Binding MainImageUrl, Converter={StaticResource NgrokConverter}, IsAsync=True}" 
+                                                Stretch="UniformToFill" />
+                                </Border.Background>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    
+                    <UniformGrid Grid.Row="1" Columns="3" Height="70">
+                        <Border BorderBrush="#A0C8FC" BorderThickness="1" Background="#FAFAFA" Margin="0,0,10,0">
+                            <TextBlock Text="ФОТО 2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <Border BorderBrush="#A0C8FC" BorderThickness="1" Background="#FAFAFA" Margin="5,0,5,0">
+                            <TextBlock Text="ФОТО 3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <Border BorderBrush="#A0C8FC" BorderThickness="1" Background="#FAFAFA" Margin="10,0,0,0">
+                            <TextBlock Text="ФОТО 4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </UniformGrid>
+                </Grid>
+                
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>    
+                        <RowDefinition Height="Auto"/> 
+                    </Grid.RowDefinitions>
+                    
+                    <StackPanel Grid.Row="0" Margin="0,10,0,0">
+                        <TextBlock Text="{Binding PriceString}" 
+                                   FontSize="18" FontWeight="SemiBold" 
+                                   Margin="0,0,0,25" TextWrapping="Wrap"/>
+                        
+                        <TextBlock Text="{Binding FullAddress}" 
+                                   FontSize="16" FontWeight="Medium" 
+                                   Margin="0,0,0,20" TextWrapping="Wrap"/>
+                        
+                        <TextBlock Text="{Binding Specs}" 
+                                   FontSize="16" FontWeight="Medium" 
+                                   Margin="0,0,0,25" TextWrapping="Wrap"/>
+                        
+                        <TextBlock Text="{Binding Description}" 
+                                   FontSize="15" 
+                                   LineHeight="24"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                    
+                    <WrapPanel Grid.Row="1" Orientation="Horizontal" Margin="0,20,0,0">
+                        <Button Content="ЗВ'ЯЗАТИСЯ З ВЛАСНИКОМ" 
+                                Style="{StaticResource PrimaryButtonStyle}" 
+                                Command="{Binding ContactOwnerCommand}"
+                                Padding="20,12" Margin="0,0,15,10"
+                                FontWeight="Bold"/>
+                        
+                        <Button Content="ДОДАТИ В ОБРАНЕ +" 
+                                Style="{StaticResource PrimaryButtonStyle}" 
+                                Command="{Binding AddToFavoritesCommand}"
+                                Padding="20,12" Margin="0,0,0,10"
+                                FontWeight="Bold"/>
+                    </WrapPanel>
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid Background="#CCFFFFFF" 
+              Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+          
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" 
+                             Width="100" Height="10" 
+                             Margin="0,0,0,15"
+                             Foreground="#A0C8FC" Background="Transparent" BorderThickness="0"/>
+            
+                <TextBlock Text="Завантаження..." 
+                           FontWeight="Bold" Foreground="#555555" 
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

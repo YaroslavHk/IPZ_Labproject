@@ -1,6 +1,6 @@
-﻿using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
+﻿using System;
+using System.Net;
+using System.Net.Http;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using RentalClient.Services;
@@ -15,24 +15,27 @@ public partial class App : Application
     
     protected override void OnStartup(StartupEventArgs e)
     {
+        ServicePointManager.DefaultConnectionLimit = 10;
+        
         base.OnStartup(e);
-            string apiUrl = ConfigLoader.LoadServerUrl();
         
-            var services = new ServiceCollection();
-            ConfigureServices(services, apiUrl);
-            ServiceProvider = services.BuildServiceProvider();
+        string apiUrl = ConfigLoader.LoadServerUrl();
         
-            var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
-            MainWindow = mainWindow;
-            mainWindow.Show();
-            
-            var navigationService = ServiceProvider.GetRequiredService<INavigationService>();
-            
-            navigationService.NavigateRootTo<MainWindowView>();
+        var services = new ServiceCollection();
+        ConfigureServices(services, apiUrl);
+        ServiceProvider = services.BuildServiceProvider();
+    
+        var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
+        MainWindow = mainWindow;
+        mainWindow.Show();
+        
+        var navigationService = ServiceProvider.GetRequiredService<INavigationService>();
+        navigationService.NavigateRootTo<MainWindowView>();
     }
     
     private void ConfigureServices(IServiceCollection services, string apiUrl)
     {
+        // HTTP & API Services
         services.AddTransient<AuthHeaderHandler>();
         
         services.AddHttpClient<IRentalApiService, RentalApiService>(client =>
@@ -43,9 +46,14 @@ public partial class App : Application
         })
         .AddHttpMessageHandler<AuthHeaderHandler>();
         
+        // State & Core Services
         services.AddSingleton<INavigationService, NavigationService>();
         services.AddSingleton<IUserSession, UserSession>();
+        services.AddSingleton<ISearchStateService, SearchStateService>();
+        services.AddSingleton<IListingStateService, ListingStateService>();
+        services.AddSingleton<IDialogService, DialogHelper>();
         
+        // ViewModels
         services.AddTransient<ShellViewModel>();
         services.AddTransient<MainLayoutViewModel>();
         services.AddTransient<ProfileViewModel>();
@@ -53,7 +61,10 @@ public partial class App : Application
         services.AddTransient<CreateListingViewModel>();
         services.AddTransient<SignInViewModel>();
         services.AddTransient<SignUpViewModel>();
+        services.AddTransient<ListingViewModel>();
+        services.AddTransient<EditListingViewModel>();
         
+        // Views
         services.AddTransient<MainWindow>();
         services.AddTransient<MainWindowView>();
         services.AddTransient<ProfileView>();
@@ -61,24 +72,7 @@ public partial class App : Application
         services.AddTransient<CreateListingView>();
         services.AddTransient<SignInView>();
         services.AddTransient<SignUpView>();
+        services.AddTransient<ListingView>();
+        services.AddTransient<EditListingView>();
     }
 }
-
-class Rental
-{
-    public int Id { get; set; }
-    public string Title { get; set; } = "";
-    public decimal Price { get; set; }
-    public string City { get; set; } = "";
-    public string Type { get; set; } = "";
-    public float LivingSpace{get; set;}
-    public string Description { get; set; } = "";
-}
-
-public record AuthRequest(string Login, string Password);
-public record AuthResponse(string Token);
-public record RegisterRequest(string Email, string UserName, string Phone, string Password);
-
-public record ShortRentalResponse(Guid Id, string Title, decimal Price, string City, string ImageUrl);
-public record RentalRequest(string Title, string Description, decimal Price, string City, string Address, string Type, float LivingSpace, int QuantityRooms);
-public record RentalPostResponse(Guid Id);

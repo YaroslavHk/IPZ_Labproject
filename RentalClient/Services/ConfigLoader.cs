@@ -1,10 +1,13 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json;
 
 namespace RentalClient.Services;
 
 public static class ConfigLoader
 {
+    private record AppConfig(string ServerUrl);
+
     public static string LoadServerUrl()
     {
         string filePath = "config.json";
@@ -31,10 +34,5 @@ public static class ConfigLoader
         {
             throw new InvalidOperationException($"[Ошибка структуры JSON]: {ex.Message}", ex);
         }
-    }
-    
-    class AppConfig
-    {
-        public string ServerUrl { get; set; } = "";
     }
 }

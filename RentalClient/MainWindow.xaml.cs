@@ -1,13 +1,7 @@
-﻿using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Windows;
-using System.Windows.Controls;
-using RentalClient.Services;
+﻿using System.Windows;
 using RentalClient.ViewModels;
 
 namespace RentalClient;
-
 
 public partial class MainWindow : Window
 {
@@ -17,4 +11,3 @@ public partial class MainWindow : Window
         DataContext = viewModel;
     }
 }
-

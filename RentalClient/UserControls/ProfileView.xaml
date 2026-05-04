@@ -4,9 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:RentalClient.UserControls"
+             xmlns:core="clr-namespace:RentalClient.Core"
              mc:Ignorable="d"
              Background="{StaticResource BackgroundBrush}">
-       
+    
+    <UserControl.Resources>
+        <core:NgrokImageConverter x:Key="NgrokConverter"/>
+    </UserControl.Resources>
+    
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="320"/>
@@ -17,28 +22,122 @@
             <Border Style="{StaticResource CardBorderStyle}" 
                     Padding="30" Margin="0,0,0,20">
                 <StackPanel>
-                    <Border Height="200" Width="200" 
-                            BorderBrush="{StaticResource BorderPrimaryBrush}" BorderThickness="2" CornerRadius="10"
-                            Background="#FAFAFA" Margin="0,0,0,20">
-                        <TextBlock Text="Аватар" Foreground="{StaticResource TextHintBrush}" 
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
+    <Border Height="200" Width="200" 
+            BorderBrush="{StaticResource BorderPrimaryBrush}" BorderThickness="2" CornerRadius="10"
+            Background="#FAFAFA" Margin="0,0,0,20">
+        <TextBlock Text="Аватар" Foreground="{StaticResource TextHintBrush}" 
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    </Border>
 
-                    <TextBlock Text="{Binding FullName}" 
-                               FontWeight="Heavy" FontSize="24" 
-                               HorizontalAlignment="Center" Margin="0,0,0,15"/>
-                    
-                    <TextBlock Text="{Binding PhoneNumber}" 
-                               HorizontalAlignment="Center" Margin="0,5"/>
-                    
-                    <TextBlock Text="{Binding Email}" 
-                               HorizontalAlignment="Center" Margin="0,5,0,30"/>
+    <TextBlock Text="{Binding FullName}" FontWeight="Heavy" FontSize="24" HorizontalAlignment="Center" Margin="0,0,0,15">
+        <TextBlock.Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="Visibility" Value="Visible"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </TextBlock.Style>
+    </TextBlock>
+    <TextBox Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}" FontSize="18" FontWeight="Medium" Width="220" HorizontalAlignment="Center" Margin="0,0,0,15">
+        <TextBox.Style>
+            <Style TargetType="TextBox" BasedOn="{StaticResource FilterTextBoxStyle}">
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </TextBox.Style>
+    </TextBox>
 
-                    <Button Content="Редагувати" 
-                            Style="{StaticResource PrimaryButtonStyle}" 
-                            Command="{Binding EditProfileCommand}"
-                            Margin="0"/>
-                </StackPanel>
+    <TextBlock Text="{Binding PhoneNumber}" HorizontalAlignment="Center" Margin="0,5">
+        <TextBlock.Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="Visibility" Value="Visible"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </TextBlock.Style>
+    </TextBlock>
+    <TextBox Text="{Binding PhoneNumber, UpdateSourceTrigger=PropertyChanged}" Width="220" HorizontalAlignment="Center" Margin="0,5">
+        <TextBox.Style>
+            <Style TargetType="TextBox" BasedOn="{StaticResource FilterTextBoxStyle}">
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </TextBox.Style>
+    </TextBox>
+
+    <TextBlock Text="{Binding Email}" HorizontalAlignment="Center" Margin="0,5,0,30">
+        <TextBlock.Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="Visibility" Value="Visible"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </TextBlock.Style>
+    </TextBlock>
+    <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" Width="220" HorizontalAlignment="Center" Margin="0,5,0,30">
+        <TextBox.Style>
+            <Style TargetType="TextBox" BasedOn="{StaticResource FilterTextBoxStyle}">
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </TextBox.Style>
+    </TextBox>
+
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,30">
+        <Button Command="{Binding EditProfileCommand}" MinWidth="130">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+                    <Setter Property="Content" Value="Редагувати"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                            <Setter Property="Content" Value="Зберегти"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        
+        <Button Command="{Binding CancelEditCommand}" Content="Відмінити" MinWidth="100" Margin="10,0,0,0">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Setter Property="Background" Value="#A0A0A0"/> 
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+    </StackPanel>
+
+    <Button Content="Вийти" 
+            Style="{StaticResource PrimaryButtonStyle}" 
+            Command="{Binding LogOutCommand}"
+            Margin="0"/>
+</StackPanel>
             </Border>
             
             <Button Content="Додати нове оголошення" 
@@ -73,7 +172,7 @@
                                  Style="{StaticResource TabRadioButtonStyle}"/>
                 </Grid>
             </Border>
-            
+            <Grid Grid.Row="1">
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 
                 <ItemsControl ItemsSource="{Binding UserAds}">
@@ -85,12 +184,11 @@
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Style="{StaticResource CardBorderStyle}" MaxWidth="300" MinWidth="250" Margin="0,0,20,20" Padding="15">
+                            <Border Style="{StaticResource CardBorderStyle}" MaxWidth="400" MinWidth="250" Margin="0,0,20,20" Padding="15">
                                 <StackPanel>
                                     <Border Height="180" BorderBrush="{StaticResource BorderPrimaryBrush}" BorderThickness="1" CornerRadius="10" Margin="0,0,0,15">
                                         <Border.Background>
-                                            <ImageBrush ImageSource="{Binding ImageUrl}" 
-                                                        Stretch="UniformToFill" />
+                                            <ImageBrush ImageSource="{Binding ImageUrl, Converter={StaticResource NgrokConverter}, IsAsync=True}" Stretch="UniformToFill" />
                                         </Border.Background>
                                     </Border>
                                     
@@ -100,6 +198,7 @@
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
@@ -112,18 +211,55 @@
                                                 Margin="0,0,5,0" Padding="5"/>
                                                 
                                         <Button Grid.Column="1" 
+                                                Content="Сховати" 
+                                                Style="{StaticResource PrimaryButtonStyle}" 
+                                                Command="{Binding DataContext.HideAdCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}"
+                                                Margin="5,0,0,0" Padding="5"/>
+                                        
+                                        <Button Grid.Column="2" 
                                                 Content="Видалити" 
                                                 Style="{StaticResource PrimaryButtonStyle}" 
                                                 Command="{Binding DataContext.DeleteAdCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                 CommandParameter="{Binding}"
                                                 Margin="5,0,0,0" Padding="5"/>
                                     </Grid>
+                                    <Button Content="Прибрати з обраного" 
+                                            Command="{Binding DataContext.RemoveFromFavoritesCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding}"
+                                            Background="#D9534F" Foreground="White" FontWeight="Bold" Padding="5" BorderThickness="0">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding DataContext.IsFavoritesViewActive, RelativeSource={RelativeSource AncestorType=ItemsControl}}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
+                <Grid Background="#CCFFFFFF" 
+                      Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+          
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ProgressBar IsIndeterminate="True" 
+                                     Width="100" Height="10" 
+                                     Margin="0,0,0,15"
+                                     Foreground="#A0C8FC" Background="Transparent" BorderThickness="0"/>
+            
+                        <TextBlock Text="Завантаження..." 
+                                   FontWeight="Bold" Foreground="#555555" 
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

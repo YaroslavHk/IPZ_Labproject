@@ -3,8 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:RentalClient"
+             xmlns:core="clr-namespace:RentalClient.Core"
              mc:Ignorable="d"
+             xmlns:svgc="http://sharpvectors.codeplex.com/svgc"
+             xmlns:converters="http://sharpvectors.codeplex.com/svgc/"
              Background="{StaticResource BackgroundBrush}">
     <Grid>
         <Grid.RowDefinitions>
@@ -19,27 +21,38 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             
-            <Label Grid.Column="0" 
-                   Content="House Find" 
-                   Style="{StaticResource LogoLabelStyle}" 
-                   VerticalAlignment="Center">
-                <Label.InputBindings>
+            <Border Grid.Column="0" 
+                    Style="{StaticResource LogoBorderStyle}" 
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Left">
+    
+                <Border.InputBindings>
                     <MouseBinding Gesture="LeftClick" Command="{Binding HomeCommand}" />
-                </Label.InputBindings>
-            </Label>
+                </Border.InputBindings>
+    
+                <converters:SvgViewbox Source="/Themes/Resources/Logo.svg" 
+                       Height="80"
+                       Stretch="Uniform" />
+            </Border>
             
             <TextBox Grid.Column="1" 
                      Style="{StaticResource RoundTextBoxStyle}" 
                      Tag="ПОШУК ЗА МІСТОМ/АДРЕСОЮ..."
                      HorizontalAlignment="Stretch" VerticalContentAlignment="Center" 
                      Margin="30,0" 
-                     local:Designer.IsMonitoring="True" />
+                     core:Designer.IsMonitoring="True"
+                     Text="{Binding SearchState.SearchText, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Enter" Command="{Binding PerformGlobalSearchCommand}"/>
+                </TextBox.InputBindings>
+            </TextBox>
             
             <Button Grid.Column="2" 
                     Content="Профіль" 
                     Style="{StaticResource PrimaryButtonStyle}" 
                     Command="{Binding ProfileCommand}" 
                     VerticalAlignment="Center" />
+            
         </Grid>
         
         <ContentControl Grid.Row="1" Content="{Binding CurrentWorkplaceView}" />

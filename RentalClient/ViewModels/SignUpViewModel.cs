@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using RentalClient.Core;
 using RentalClient.Services;
@@ -11,29 +11,28 @@ namespace RentalClient.ViewModels
     {
         private readonly INavigationService _navigationService;
         private readonly IRentalApiService _apiService;
+        private readonly IDialogService _dialogService;
 
-        private string _email;
-        public string Email
-        {
-            get => _email;
-            set { _email = value; OnPropertyChanged(); }
-        }
+        private string _email = "";
+        public string Email { get => _email; set { _email = value; OnPropertyChanged(); ValidateForm(); } }
 
-        private string _userName;
-        public string UserName
-        {
-            get => _userName;
-            set { _userName = value; OnPropertyChanged(); }
-        }
+        private string _userName = "";
+        public string UserName { get => _userName; set { _userName = value; OnPropertyChanged(); ValidateForm(); } }
         
-        private string _phone;
-
-        public string Phone
-        {
-            get => _phone; 
-            set { _phone = value; OnPropertyChanged(); }
-        }
+        private string _phone = "";
+        public string Phone { get => _phone; set { _phone = value; OnPropertyChanged(); ValidateForm(); } }
         
+        private string _currentPassword = "";
+        public string CurrentPassword { get => _currentPassword; set { _currentPassword = value; ValidateForm(); } }
+
+        private string _currentConfirmPassword = "";
+        public string CurrentConfirmPassword { get => _currentConfirmPassword; set { _currentConfirmPassword = value; ValidateForm(); } }
+
+        private string _passwordErrorMessage;
+        public string PasswordErrorMessage { get => _passwordErrorMessage; set { _passwordErrorMessage = value; OnPropertyChanged(); } }
+
+        private bool _isFormValid;
+
         private bool _isLoading;
         public bool IsLoading
         {
@@ -50,50 +49,63 @@ namespace RentalClient.ViewModels
         public ICommand SwitchSignCommand { get; }
         public ICommand BackToMainWindowCommand { get; }
 
-        public SignUpViewModel(INavigationService navigationService, IRentalApiService apiService)
+        public SignUpViewModel(INavigationService navigationService, IRentalApiService apiService, IDialogService dialogService)
         {
             _navigationService = navigationService;
             _apiService = apiService;
+            _dialogService = dialogService;
 
             RegisterCommand = new RelayCommand(ExecuteRegister, CanExecuteRegister);
             SwitchSignCommand = new RelayCommand(o => _navigationService.NavigateRootTo<SignInView>());
             BackToMainWindowCommand = new RelayCommand(o => _navigationService.NavigateRootTo<MainWindowView>());
         }
 
+        private void ValidateForm()
+        {
+            PasswordErrorMessage = "";
+
+            bool isEmailValid = !string.IsNullOrWhiteSpace(Email) && Email.Contains("@");
+            bool isUserValid = !string.IsNullOrWhiteSpace(UserName);
+
+            bool isPasswordLongEnough = CurrentPassword.Length >= 8;
+            bool hasDigitOrSymbol = CurrentPassword.Any(char.IsDigit) || CurrentPassword.Any(char.IsPunctuation) || CurrentPassword.Any(char.IsSymbol);
+            bool passwordsMatch = CurrentPassword == CurrentConfirmPassword;
+
+            if (!string.IsNullOrEmpty(CurrentPassword))
+            {
+                if (!isPasswordLongEnough)
+                {
+                    PasswordErrorMessage = "Пароль має містити мінімум 8 символів";
+                }
+                else if (!hasDigitOrSymbol)
+                {
+                    PasswordErrorMessage = "Потрібно використовувати цифри або символи";
+                }
+                else if (!string.IsNullOrEmpty(CurrentConfirmPassword) && !passwordsMatch)
+                {
+                    PasswordErrorMessage = "Паролі не співпадають";
+                }
+            }
+
+            _isFormValid = isEmailValid && isUserValid && isPasswordLongEnough && hasDigitOrSymbol && passwordsMatch;
+            
+            ((RelayCommand)RegisterCommand).RaiseCanExecuteChanged();
+        }
+
+        private bool CanExecuteRegister(object parameter) => _isFormValid && !IsLoading;
+
         private async void ExecuteRegister(object parameter)
         {
-            var passwordBoxes = parameter as object[];
-            if (passwordBoxes == null || passwordBoxes.Length < 2) return;
-
-            var passBox1 = passwordBoxes[0] as PasswordBox;
-            var passBox2 = passwordBoxes[1] as PasswordBox;
-
-            string password = passBox1?.Password;
-            string passwordConfirmation = passBox2?.Password;
-
-            if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(UserName) || 
-                string.IsNullOrEmpty(password) || string.IsNullOrEmpty(passwordConfirmation))
-            {
-                MessageBox.Show("Заповніть пусті поля", "Увага", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (password != passwordConfirmation)
-            {
-                MessageBox.Show("Паролі відрізняються", "Увага", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
             IsLoading = true;
 
             try
             {
-                var registerRequestData = new RegisterRequest(Email, UserName, Phone, password);
+                var registerRequestData = new RegisterRequest(Email, UserName, Phone, CurrentPassword);
                 bool isSuccess = await _apiService.RegisterAsync(registerRequestData);
 
                 if (isSuccess)
                 {
-                    var loginRequest = new AuthRequest(UserName, password);
+                    var loginRequest = new AuthRequest(UserName, CurrentPassword);
                     bool loginSuccess = await _apiService.LoginAsync(loginRequest);
                     
                     if (loginSuccess)
@@ -108,18 +120,13 @@ namespace RentalClient.ViewModels
                 }
                 else
                 {
-                    MessageBox.Show("Сервер відхилив реєстрацію", "Помилка сервера", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _dialogService.ShowError("Сервер відхилив реєстрацію. Можливо, такий Email вже існує.");
                 }
             }
             finally
             {
                 IsLoading = false;
             }
-        }
-
-        private bool CanExecuteRegister(object parameter)
-        {
-            return !IsLoading;
         }
     }
 }

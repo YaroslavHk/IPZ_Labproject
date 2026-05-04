@@ -11,6 +11,7 @@ namespace RentalClient.ViewModels
     {
         private readonly INavigationService _navigationService;
         private readonly IRentalApiService _apiService;
+        private readonly IDialogService _dialogService;
 
         private string _login;
         public string Login
@@ -36,12 +37,12 @@ namespace RentalClient.ViewModels
         public ICommand SwitchSignCommand { get; }
         public ICommand BackToMainWindowCommand { get; }
 
-        public SignInViewModel(INavigationService navigationService, IRentalApiService apiService)
+        public SignInViewModel(INavigationService navigationService, IRentalApiService apiService,  IDialogService dialogService)
         {
             _navigationService = navigationService;
             _apiService = apiService;
+            _dialogService = dialogService;
 
-            // Инициализация команд
             LoginCommand = new RelayCommand(ExecuteLogin, CanExecuteLogin);
             SwitchSignCommand = new RelayCommand(o => _navigationService.NavigateRootTo<SignUpView>());
             BackToMainWindowCommand = new RelayCommand(o => _navigationService.NavigateRootTo<MainWindowView>());
@@ -54,7 +55,7 @@ namespace RentalClient.ViewModels
 
             if (string.IsNullOrEmpty(Login) || string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Заповніть пусті поля", "Увага", MessageBoxButton.OK, MessageBoxImage.Warning);
+                _dialogService.ShowWarning("Заповніть пусті поля");
                 return;
             }
 
@@ -72,7 +73,7 @@ namespace RentalClient.ViewModels
                 }
                 else
                 {
-                    MessageBox.Show("Сервер відхилив авторизацію. Перевірте данні.", "Помилка сервера", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _dialogService.ShowError("Сервер відхилив авторизацію. Перевірте данні.");
                 }
             }
             finally
