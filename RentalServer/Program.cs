@@ -9,13 +9,16 @@ using RentalServer.Middlewares;
 using RentalServer.Models.Debug;
 using Serilog;
 using Serilog.Formatting.Compact;
+
 using Microsoft.AspNetCore.HttpOverrides;
+using RentalServer.Services;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .Enrich.FromLogContext()
     .WriteTo.Console()
     .WriteTo.File(new CompactJsonFormatter(), "logs/server-log.json", rollingInterval: RollingInterval.Day)
+    .WriteTo.BetterStack(sourceToken: "UxM7SjjFHuLaE4iXdXP7PBZP")
     .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +41,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+//builder.Services.AddHostedService<NgrokHostedService>();
 builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -109,5 +113,8 @@ app.UseExceptionHandler();
 
 app.MapRentalEndpoints();
 app.MapAuthEndpoints(app.Configuration);
-
+app.MapFavoriteEndpoints();
+    
 app.Run();
+
+public partial class Program { }

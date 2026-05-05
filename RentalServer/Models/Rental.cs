@@ -16,5 +16,7 @@ public class Rental
     public DateTime LastModified { get; set; }
     public bool IsRentedOut { get; set; }
     public bool IsHidden { get; set; }
-    public List<RentalImage> Images { get; set; } = new();
+    public ICollection<RentalImage> Images { get; set; } = new List<RentalImage>();
+    
+    public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
 }

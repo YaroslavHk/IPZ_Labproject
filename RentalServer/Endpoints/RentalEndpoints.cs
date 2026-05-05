@@ -39,7 +39,7 @@ public static class RentalEndpoints
             var baseUrl = $"{context.Request.Scheme}://{context.Request.Host}";
             
             // Обязательно Include(r => r.Images), чтобы картинки подтянулись из базы
-            var query = db.Rentals.Include(r => r.Images).Where(r => !r.IsHidden && !r.IsRentedOut);
+            var query = db.Rentals.Include(r => r.Images).AsQueryable();
             
             if (!userId.HasValue)
             {
@@ -133,7 +133,14 @@ public static class RentalEndpoints
                 rental.RoomCount,
                 rental.UserId,
                 rental.Created,
-                FullImageUrls = rental.Images.Select(i => baseUrl + i.FullImageUrl).ToList(),
+    
+                // БЕЗОПАСНАЯ СКЛЕЙКА:
+                // 1. rental.Images?. защищает от NullReferenceException
+                // 2. ?? [] возвращает пустой массив, если картинок нет вообще
+                // 3. i.FullImageUrl.TrimStart('/') гарантирует, что между baseUrl и путем будет ровно один слэш
+                FullImageUrls = rental.Images?.Select(i => 
+                    $"{baseUrl}/{i.FullImageUrl.TrimStart('/')}"
+                ).ToList() ?? []
             };
     
             return Results.Ok(response);
@@ -291,7 +298,77 @@ public static class RentalEndpoints
         
         
     }
-    
+    public static void MapFavoriteEndpoints(this IEndpointRouteBuilder app)
+{
+    var group = app.MapGroup("/api/favorites").RequireAuthorization();
+
+    // 1. ПОЛУЧИТЬ ВСЕ ИЗБРАННЫЕ (TEST 27/25)
+    group.MapGet("/", async (RentalDbContext db, ClaimsPrincipal user, HttpContext context) =>
+    {
+        var userId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var baseUrl = $"{context.Request.Scheme}://{context.Request.Host}";
+
+        var favorites = await db.Favorites
+            .Where(f => f.UserId == userId)
+            .Include(f => f.Rental)
+                .ThenInclude(r => r.Images)
+            .Select(f => f.Rental)
+            .ToListAsync();
+
+        // Мапим в анонимный объект или DTO (аналогично общему поиску)
+        var response = favorites.Select(r => new {
+            r.Id,
+            r.Title,
+            r.Price,
+            r.City,
+            MainThumbnailUrl = baseUrl + r.Images.FirstOrDefault(i => i.IsMain)?.ThumbnailUrl
+        });
+
+        return Results.Ok(response);
+    });
+
+    // 2. ДОБАВИТЬ В ИЗБРАННОЕ (TEST 25)
+    group.MapPost("/{rentalId:guid}", async (Guid rentalId, RentalDbContext db, ClaimsPrincipal user) =>
+    {
+        var userId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        // Проверяем, существует ли объявление
+        var rentalExists = await db.Rentals.AnyAsync(r => r.Id == rentalId);
+        if (!rentalExists) return Results.NotFound(new { Message = "Объявление не найдено" });
+
+        // Проверяем, нет ли его уже в избранном
+        var alreadyFavorite = await db.Favorites.AnyAsync(f => f.UserId == userId && f.RentalId == rentalId);
+        if (alreadyFavorite) return Results.Conflict(new { Message = "Уже в избранном" });
+
+        var favorite = new Favorite
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            RentalId = rentalId
+        };
+
+        db.Favorites.Add(favorite);
+        await db.SaveChangesAsync();
+
+        return Results.Ok(new { Message = "Добавлено в избранное" });
+    });
+
+    // 3. УДАЛИТЬ ИЗ ИЗБРАННОГО (TEST 26)
+    group.MapDelete("/{rentalId:guid}", async (Guid rentalId, RentalDbContext db, ClaimsPrincipal user) =>
+    {
+        var userId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        var favorite = await db.Favorites
+            .FirstOrDefaultAsync(f => f.UserId == userId && f.RentalId == rentalId);
+
+        if (favorite == null) return Results.NotFound();
+
+        db.Favorites.Remove(favorite);
+        await db.SaveChangesAsync();
+
+        return Results.NoContent();
+    });
+}
     
     
 }
