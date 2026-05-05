@@ -83,20 +83,20 @@ var app = builder.Build();
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseSerilogRequestLogging();
 
-if (args.Contains("--seed"))
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var db = scope.ServiceProvider.GetRequiredService<RentalDbContext>();
-        
-        Console.WriteLine("Начинаю заполнение базы данных...");
-        await DatabaseSeeder.SeedAsync(db);
-        Console.WriteLine("Заполнение завершено. Выход из программы.");
-    }
-    
-    // Прерываем выполнение (сервер не будет запускаться, мы просто выполнили скрипт)
-    return; 
-}
+// if (args.Contains("--seed"))
+// {
+//     using (var scope = app.Services.CreateScope())
+//     {
+//         var db = scope.ServiceProvider.GetRequiredService<RentalDbContext>();
+//         
+//         Console.WriteLine("Начинаю заполнение базы данных...");
+//         await DatabaseSeeder.SeedAsync(db);
+//         Console.WriteLine("Заполнение завершено. Выход из программы.");
+//     }
+//     
+//     // Прерываем выполнение (сервер не будет запускаться, мы просто выполнили скрипт)
+//     return; 
+// }
 
 if (app.Environment.IsDevelopment())
 {
